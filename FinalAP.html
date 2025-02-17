@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Programming Final Exam</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+        background-color: #f8fafc;
+        background-image: 
+            linear-gradient(to right, rgba(42, 103, 111, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(42, 103, 111, 0.03) 1px, transparent 1px),
+            url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232a676f' fill-opacity='0.05'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/svg%3E");
+        background-size: 
+            40px 40px,
+            40px 40px,
+            52px 26px;
+    }
+
+    .quiz-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid rgba(224, 224, 224, 0.5);
+        backdrop-filter: blur(2px);
+    }
+
+
+    .quiz-header {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        color: white;
+        padding: 1.5rem;
+        background-color: #2a676f;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quiz-header::after {
+        content: 'Javafx';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.15;
+        font-size: 2rem;
+        font-family: monospace;
+        font-weight: 700;
+    }
+
+    .controls {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8rem 2rem;
+        background-color: #2a676f;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0.5rem;
+        transition: all 0.3s ease;
+        gap: 8px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        background-color: #a98a50;
+        box-shadow: 0 2px 8px rgba(42, 103, 111, 0.3);
+    }
+
+    .question {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #ffffff;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: visible;
+    }
+
+    .question::before {
+        content: '✧';
+        position: absolute;
+        left: -22px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #2a676f;
+        font-size: 1.8rem;
+        opacity: 0.8;
+        z-index: 1;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    .question:hover {
+        transform: translateX(8px);
+        border-color: #2a676f;
+        box-shadow: 4px 4px 12px rgba(42, 103, 111, 0.1);
+    }
+
+    .question:hover::before {
+        color: #a98a50;
+        transform: translateY(-50%) rotate(45deg) scale(1.2);
+        left: -24px;
+    }
+
+    .options label {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        margin: 0.8rem 0;
+        background: #f8fafc;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        gap: 10px;
+        border: 2px solid transparent !important;
+        position: relative;
+        z-index: 2;
+    }
+
+    .options label:hover {
+        background: #e2e8f0;
+        transform: scale(1.02);
+    }
+
+    .options input[type="radio"] {
+        margin-left: 1rem;
+        transform: scale(1.2);
+        accent-color: #2a676f;
+        cursor: pointer;
+    }
+
+    .answer-box {
+        margin-top: 1rem;
+        padding: 1.2rem;
+        border-radius: 8px;
+        display: none;
+        animation: fadeIn 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .correct {
+        background-color: #d4edda;
+        border: 2px solid #c3e6cb;
+        color: #155724;
+    }
+
+    .incorrect {
+        background-color: #f8d7da;
+        border: 2px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+        .btn {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        .quiz-header {
+            font-size: 1.8rem;
+            padding: 1rem;
+        }
+        
+        .question::before {
+            display: none;
+        }
+    }
+</style>
+
+
+
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            Advanced Programming Final Exam
+        </div>
+        <div class="controls">
+            <button class="btn" onclick="resetQuiz()"> Reset</button>
+            <button class="btn" onclick="showAllAnswers()"> Show Answers</button>
+            <button class="btn" onclick="hideAllAnswers()"> Hide Answers</button>
+        </div>
+
+	<div class="question">
+    <h3>1. A Graphical User Interface (GUI) primarily:</h3>
+    <div class="options">
+        <label><input type="radio" name="q1" value="a"> a) Makes a system harder to use</label>
+        <label><input type="radio" name="q1" value="b"> b) Requires only command-line input</label>
+        <label><input type="radio" name="q1" value="c"> c) Makes a system user-friendly and easy to use</label>
+        <label><input type="radio" name="q1" value="d"> d) Eliminates the need for user interaction</label>
+    </div>
+    <div class="answer-box" id="answer1" data-correct-answer="c">Correct Answer: c) Makes a system user-friendly and easy to use</div>
+</div>
+
+<div class="question">
+    <h3>2. Which of the following is used to assign a specific style to UI components?</h3>
+    <div class="options">
+        <label><input type="radio" name="q2" value="a"> a) XML</label>
+        <label><input type="radio" name="q2" value="b"> b) CSS</label>
+        <label><input type="radio" name="q2" value="c"> c) JavaScript</label>
+        <label><input type="radio" name="q2" value="d"> d) SQL</label>
+    </div>
+    <div class="answer-box" id="answer2" data-correct-answer="b">Correct Answer: b) CSS</div>
+</div>
+
+<div class="question">
+    <h3>3. If you need to create a custom UI component in JavaFX, which class should you extend?</h3>
+    <div class="options">
+        <label><input type="radio" name="q3" value="a"> a) Pane</label>
+        <label><input type="radio" name="q3" value="b"> b) Control</label>
+        <label><input type="radio" name="q3" value="c"> c) Application</label>
+        <label><input type="radio" name="q3" value="d"> d) Scene</label>
+    </div>
+    <div class="answer-box" id="answer3" data-correct-answer="b">Correct Answer: b) Control</div>
+</div>
+
+<div class="question">
+    <h3>4. Why are prefixes like lbl (for Label) commonly used in UI development?</h3>
+    <div class="options">
+        <label><input type="radio" name="q4" value="a"> a) To improve readability and organization of reference variables</label>
+        <label><input type="radio" name="q4" value="b"> b) To enforce strict naming conventions in JavaFX</label>
+        <label><input type="radio" name="q4" value="c"> c) To make UI components run faster</label>
+        <label><input type="radio" name="q4" value="d"> d) To automatically generate event handlers</label>
+    </div>
+    <div class="answer-box" id="answer4" data-correct-answer="a">Correct Answer: a) To improve readability and organization of reference variables</div>
+</div>
+
+<div class="question">
+    <h3>5. What is the purpose of a Label in a UI?</h3>
+    <div class="options">
+        <label><input type="radio" name="q5" value="a"> a) To allow users to enter text</label>
+        <label><input type="radio" name="q5" value="b"> b) To display non-editable text</label>
+        <label><input type="radio" name="q5" value="c"> c) To create interactive buttons</label>
+        <label><input type="radio" name="q5" value="d"> d) To manage user input validation</label>
+    </div>
+    <div class="answer-box" id="answer5" data-correct-answer="b">Correct Answer: b) To display non-editable text</div>
+</div>
+
+<div class="question">
+    <h3>6. Which UI control is used to create a labeled button?</h3>
+    <div class="options">
+        <label><input type="radio" name="q6" value="a"> a) Label</label>
+        <label><input type="radio" name="q6" value="b"> b) Button</label>
+        <label><input type="radio" name="q6" value="c"> c) CheckBox</label>
+        <label><input type="radio" name="q6" value="d"> d) RadioButton</label>
+    </div>
+    <div class="answer-box" id="answer6" data-correct-answer="b">Correct Answer: b) Button</div>
+</div>
+
+<div class="question">
+    <h3>7. What does a ColorPicker allow users to do?</h3>
+    <div class="options">
+        <label><input type="radio" name="q7" value="a"> a) Select a color from a pane of controls</label>
+        <label><input type="radio" name="q7" value="b"> b) Display text on the screen</label>
+        <label><input type="radio" name="q7" value="c"> c) Toggle between ON and OFF states</label>
+        <label><input type="radio" name="q7" value="d"> d) Scroll through a list of items</label>
+    </div>
+    <div class="answer-box" id="answer7" data-correct-answer="a">Correct Answer: a) Select a color from a pane of controls</div>
+</div>
+
+<div class="question">
+    <h3>8. A CheckBox allows a user to:</h3>
+    <div class="options">
+        <label><input type="radio" name="q8" value="a"> a) Select multiple options independently</label>
+        <label><input type="radio" name="q8" value="b"> b) Select only one option in a group</label>
+        <label><input type="radio" name="q8" value="c"> c) Enter text into a form</label>
+        <label><input type="radio" name="q8" value="d"> d) Display a static text label</label>
+    </div>
+    <div class="answer-box" id="answer8" data-correct-answer="a">Correct Answer: a) Select multiple options independently</div>
+</div>
+
+<div class="question">
+    <h3>9. What is a RadioButton used for in a UI?</h3>
+    <div class="options">
+        <label><input type="radio" name="q9" value="a"> a) Selecting one option from a group</label>
+        <label><input type="radio" name="q9" value="b"> b) Selecting multiple options at once</label>
+        <label><input type="radio" name="q9" value="c"> c) Displaying static text</label>
+        <label><input type="radio" name="q9" value="d"> d) Creating a scrolling list</label>
+    </div>
+    <div class="answer-box" id="answer9" data-correct-answer="a">Correct Answer: a) Selecting one option from a group</div>
+</div>
+
+<div class="question">
+    <h3>10. Which UI component is best suited for presenting a scrolling list of text items?</h3>
+    <div class="options">
+        <label><input type="radio" name="q10" value="a"> a) Label</label>
+        <label><input type="radio" name="q10" value="b"> b) ListView</label>
+        <label><input type="radio" name="q10" value="c"> c) CheckBox</label>
+        <label><input type="radio" name="q10" value="d"> d) ColorPicker</label>
+    </div>
+    <div class="answer-box" id="answer10" data-correct-answer="b">Correct Answer: b) ListView</div>
+</div>
+
+<div class="question">
+    <h3>11. What is the purpose of a TextField in a UI?</h3>
+    <div class="options">
+        <label><input type="radio" name="q11" value="a"> a) To enter a single line of text</label>
+        <label><input type="radio" name="q11" value="b"> b) To select multiple options</label>
+        <label><input type="radio" name="q11" value="c"> c) To display a progress percentage</label>
+        <label><input type="radio" name="q11" value="d"> d) To pick a color</label>
+    </div>
+    <div class="answer-box" id="answer11" data-correct-answer="a">Correct Answer: a) To enter a single line of text</div>
+</div>
+
+<div class="question">
+    <h3>12. Which UI control is specifically designed for password entry?</h3>
+    <div class="options">
+        <label><input type="radio" name="q12" value="a"> a) TextField</label>
+        <label><input type="radio" name="q12" value="b"> b) ScrollBar</label>
+        <label><input type="radio" name="q12" value="c"> c) PasswordField</label>
+        <label><input type="radio" name="q12" value="d"> d) FileChooser</label>
+    </div>
+    <div class="answer-box" id="answer12" data-correct-answer="c">Correct Answer: c) PasswordField</div>
+</div>
+
+<div class="question">
+    <h3>13. A ScrollBar allows users to:</h3>
+    <div class="options">
+        <label><input type="radio" name="q13" value="a"> a) Select from a range of values</label>
+        <label><input type="radio" name="q13" value="b"> b) Display a static text message</label>
+        <label><input type="radio" name="q13" value="c"> c) Choose a file from a dialog</label>
+        <label><input type="radio" name="q13" value="d"> d) Enter a multi-line text</label>
+    </div>
+    <div class="answer-box" id="answer13" data-correct-answer="a">Correct Answer: a) Select from a range of values</div>
+</div>
+
+<div class="question">
+    <h3>14. What does a FileChooser enable users to do?</h3>
+    <div class="options">
+        <label><input type="radio" name="q14" value="a"> a) Enter a password securely</label>
+        <label><input type="radio" name="q14" value="b"> b) Scroll through a list of options</label>
+        <label><input type="radio" name="q14" value="c"> c) Select a file from a dialog window</label>
+        <label><input type="radio" name="q14" value="d"> d) Display a percentage of completion</label>
+    </div>
+    <div class="answer-box" id="answer14" data-correct-answer="c">Correct Answer: c) Select a file from a dialog window</div>
+</div>
+
+<div class="question">
+    <h3>15. Which UI component is used to show task progress as a percentage?</h3>
+    <div class="options">
+        <label><input type="radio" name="q15" value="a"> a) ScrollBar</label>
+        <label><input type="radio" name="q15" value="b"> b) ProgressBar</label>
+        <label><input type="radio" name="q15" value="c"> c) Slider</label>
+        <label><input type="radio" name="q15" value="d"> d) PasswordField</label>
+    </div>
+    <div class="answer-box" id="answer15" data-correct-answer="b">Correct Answer: b) ProgressBar</div>
+</div>
+
+<div class="question">
+    <h3>16. A Slider allows a user to:</h3>
+    <div class="options">
+        <label><input type="radio" name="q16" value="a"> a) Select a value within a bounded interval</label>
+        <label><input type="radio" name="q16" value="b"> b) Display a message</label>
+        <label><input type="radio" name="q16" value="c"> c) Choose a file from a directory</label>
+        <label><input type="radio" name="q16" value="d"> d) Enter a secure password</label>
+    </div>
+    <div class="answer-box" id="answer16" data-correct-answer="a">Correct Answer: a) Select a value within a bounded interval</div>
+</div>
+
+<div class="question">
+    <h3>17. Which JavaFX class defines common properties for Label, Button, CheckBox, and RadioButton?</h3>
+    <div class="options">
+        <label><input type="radio" name="q17" value="a"> a) TextField</label>
+        <label><input type="radio" name="q17" value="b"> b) Labeled</label>
+        <label><input type="radio" name="q17" value="c"> c) LabelProperties</label>
+        <label><input type="radio" name="q17" value="d"> d) Label</label>
+    </div>
+    <div class="answer-box" id="answer17" data-correct-answer="b">Correct Answer: b) Labeled</div>
+</div>
+
+<div class="question">
+    <h3>18. What can the graphic property in the Labeled class be set to?</h3>
+    <div class="options">
+        <label><input type="radio" name="q18" value="a"> a) A shape</label>
+        <label><input type="radio" name="q18" value="b"> b) An image</label>
+        <label><input type="radio" name="q18" value="c"> c) A control</label>
+        <label><input type="radio" name="q18" value="d"> d) All of the above</label>
+    </div>
+    <div class="answer-box" id="answer18" data-correct-answer="d">Correct Answer: d) All of the above</div>
+</div>
+
+<div class="question">
+    <h3>19. Which method is used to set the position of a graphic relative to the text in a JavaFX Labeled control?</h3>
+    <div class="options">
+        <label><input type="radio" name="q19" value="a"> a) setAlignment(Pos value)</label>
+        <label><input type="radio" name="q19" value="b"> b) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q19" value="c"> c) setContentDisplay(ContentDisplay value)</label>
+        <label><input type="radio" name="q19" value="d"> d) setWrapText(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer19" data-correct-answer="c">Correct Answer: c) setContentDisplay(ContentDisplay value)</div>
+</div>
+
+<div class="question">
+    <h3>20. Which property is used to change the color of text in a Label, Button, or other Labeled controls?</h3>
+    <div class="options">
+        <label><input type="radio" name="q20" value="a"> a) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q20" value="b"> b) setFont(Font value)</label>
+        <label><input type="radio" name="q20" value="c"> c) setGraphic(Node value)</label>
+        <label><input type="radio" name="q20" value="d"> d) setUnderline(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer20" data-correct-answer="a">Correct Answer: a) setTextFill(Paint value)</div>
+</div>
+
+<div class="question">
+    <h3>21. Which method is used to align text and its associated graphic in a Labeled control?</h3>
+    <div class="options">
+        <label><input type="radio" name="q21" value="a"> a) setAlignment(Pos value)</label>
+        <label><input type="radio" name="q21" value="b"> b) setGraphic(Node value)</label>
+        <label><input type="radio" name="q21" value="c"> c) setContentDisplay(ContentDisplay value)</label>
+        <label><input type="radio" name="q21" value="d"> d) setWrapText(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer21" data-correct-answer="a">Correct Answer: a) setAlignment(Pos value)</div>
+</div>
+
+<div class="question">
+    <h3>22. Which method can be used to set an image, shape, or control as a graphic inside a Label or Button?</h3>
+    <div class="options">
+        <label><input type="radio" name="q22" value="a"> a) setContentDisplay(ContentDisplay value)</label>
+        <label><input type="radio" name="q22" value="b"> b) setGraphic(Node value)</label>
+        <label><input type="radio" name="q22" value="c"> c) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q22" value="d"> d) setUnderline(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer22" data-correct-answer="b">Correct Answer: b) setGraphic(Node value)</div>
+</div>
+
+<div class="question">
+    <h3>23. Which method allows text inside a Label to automatically break into multiple lines if it exceeds the width?</h3>
+    <div class="options">
+        <label><input type="radio" name="q23" value="a"> a) setWrapText(true)</label>
+        <label><input type="radio" name="q23" value="b"> b) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q23" value="c"> c) setContentDisplay(ContentDisplay value)</label>
+        <label><input type="radio" name="q23" value="d"> d) setAlignment(Pos value)</label>
+    </div>
+    <div class="answer-box" id="answer23" data-correct-answer="a">Correct Answer: a) setWrapText(true)</div>
+</div>
+
+<div class="question">
+    <h3>24. Which method is used to underline the text in a JavaFX Labeled control?</h3>
+    <div class="options">
+        <label><input type="radio" name="q24" value="a"> a) setUnderline(true)</label>
+        <label><input type="radio" name="q24" value="b"> b) setWrapText(true)</label>
+        <label><input type="radio" name="q24" value="c"> c) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q24" value="d"> d) setAlignment(Pos value)</label>
+    </div>
+    <div class="answer-box" id="answer24" data-correct-answer="a">Correct Answer: a) setUnderline(true)</div>
+</div>
+
+<div class="question">
+    <h3>25. Which method is used to handle button clicks and other action events in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q25" value="a"> a) setText(String value)</label>
+        <label><input type="radio" name="q25" value="b"> b) setOnAction(EventHandler<ActionEvent> value)</label>
+        <label><input type="radio" name="q25" value="c"> c) setContentDisplay(ContentDisplay value)</label>
+        <label><input type="radio" name="q25" value="d"> d) setWrapText(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer25" data-correct-answer="b">Correct Answer: b) setOnAction(EventHandler<ActionEvent> value)</div>
+</div>
+
+<div class="question">
+    <h3>26. Which class in JavaFX defines the common features for all buttons?</h3>
+    <div class="options">
+        <label><input type="radio" name="q26" value="a"> a) Labeled</label>
+        <label><input type="radio" name="q26" value="b"> b) ButtonBase</label>
+        <label><input type="radio" name="q26" value="c"> c) ToggleButton</label>
+        <label><input type="radio" name="q26" value="d"> d) RadioButton</label>
+    </div>
+    <div class="answer-box" id="answer26" data-correct-answer="b">Correct Answer: b) ButtonBase</div>
+</div>
+
+<div class="question">
+    <h3>27. Which of the following constructors creates a button with both text and a graphic in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q27" value="a"> a) new Button()</label>
+        <label><input type="radio" name="q27" value="b"> b) new Button(String text)</label>
+        <label><input type="radio" name="q27" value="c"> c) new Button(String text, Node graphic)</label>
+        <label><input type="radio" name="q27" value="d"> d) new Button(Node graphic, String text)</label>
+    </div>
+    <div class="answer-box" id="answer27" data-correct-answer="c">Correct Answer: c) new Button(String text, Node graphic)</div>
+</div>
+
+<div class="question">
+    <h3>28. Which method is used to determine if a CheckBox is selected in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q28" value="a"> a) isChecked()</label>
+        <label><input type="radio" name="q28" value="b"> b) isSelected()</label>
+        <label><input type="radio" name="q28" value="c"> c) getSelectionState()</label>
+        <label><input type="radio" name="q28" value="d"> d) getCheckState()</label>
+    </div>
+    <div class="answer-box" id="answer28" data-correct-answer="b">Correct Answer: b) isSelected()</div>
+</div>
+
+<div class="question">
+    <h3>29. Which method is used to set the gap between a graphic and text in a JavaFX Labeled control?</h3>
+    <div class="options">
+        <label><input type="radio" name="q29" value="a"> a) setGraphic(Node value)</label>
+        <label><input type="radio" name="q29" value="b"> b) setTextFill(Paint value)</label>
+        <label><input type="radio" name="q29" value="c"> c) setGraphicTextGap(double value)</label>
+        <label><input type="radio" name="q29" value="d"> d) setWrapText(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer29" data-correct-answer="c">Correct Answer: c) setGraphicTextGap(double value)</div>
+</div>
+
+<div class="question">
+    <h3>30. Which method groups multiple RadioButtons together allowing only one selection at a time?</h3>
+    <div class="options">
+        <label><input type="radio" name="q30" value="a"> a) setGroup()</label>
+        <label><input type="radio" name="q30" value="b"> b) setToggleGroup()</label>
+        <label><input type="radio" name="q30" value="c"> c) setSelectionGroup()</label>
+        <label><input type="radio" name="q30" value="d"> d) setRadioGroup()</label>
+    </div>
+    <div class="answer-box" id="answer30" data-correct-answer="b">Correct Answer: b) setToggleGroup()</div>
+</div>
+
+<div class="question">
+    <h3>31. Which method is used to check whether a TextField is editable?</h3>
+    <div class="options">
+        <label><input type="radio" name="q31" value="a"> a) isEnabled()</label>
+        <label><input type="radio" name="q31" value="b"> b) isEditable()</label>
+        <label><input type="radio" name="q31" value="c"> c) canEdit()</label>
+        <label><input type="radio" name="q31" value="d"> d) getEditable()</label>
+    </div>
+    <div class="answer-box" id="answer31" data-correct-answer="b">Correct Answer: b) isEditable()</div>
+</div>
+
+<div class="question">
+    <h3>32. Which method sets the preferred number of columns in a TextField?</h3>
+    <div class="options">
+        <label><input type="radio" name="q32" value="a"> a) setColumnCount(int value)</label>
+        <label><input type="radio" name="q32" value="b"> b) setPrefColumnCount(int value)</label>
+        <label><input type="radio" name="q32" value="c"> c) setColumns(int value)</label>
+        <label><input type="radio" name="q32" value="d"> d) setColumnSize(int value)</label>
+    </div>
+    <div class="answer-box" id="answer32" data-correct-answer="b">Correct Answer: b) setPrefColumnCount(int value)</div>
+</div>
+
+<div class="question">
+    <h3>33. Which method is used to set the text of a TextField in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q33" value="a"> a) setValue()</label>
+        <label><input type="radio" name="q33" value="b"> b) setText()</label>
+        <label><input type="radio" name="q33" value="c"> c) setContent()</label>
+        <label><input type="radio" name="q33" value="d"> d) setLabel()</label>
+    </div>
+    <div class="answer-box" id="answer33" data-correct-answer="b">Correct Answer: b) setText()</div>
+</div>
+
+<div class="question">
+    <h3>34. Which property in TextArea specifies the preferred number of text rows?</h3>
+    <div class="options">
+        <label><input type="radio" name="q34" value="a"> a) setPrefColumnCount(int value)</label>
+        <label><input type="radio" name="q34" value="b"> b) setPrefRowCount(int value)</label>
+        <label><input type="radio" name="q34" value="c"> c) setMaxRows(int value)</label>
+        <label><input type="radio" name="q34" value="d"> d) setRowLimit(int value)</label>
+    </div>
+    <div class="answer-box" id="answer34" data-correct-answer="b">Correct Answer: b) setPrefRowCount(int value)</div>
+</div>
+
+<div class="question">
+    <h3>35. Which method is used to add items to a ComboBox in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q35" value="a"> a) setItems(ObservableList<T>)</label>
+        <label><input type="radio" name="q35" value="b"> b) getItems().addAll(T... items)</label>
+        <label><input type="radio" name="q35" value="c"> c) addElements(T... items)</label>
+        <label><input type="radio" name="q35" value="d"> d) setValues(T... items)</label>
+    </div>
+    <div class="answer-box" id="answer35" data-correct-answer="b">Correct Answer: b) getItems().addAll(T... items)</div>
+</div>
+
+<div class="question">
+    <h3>36. Which method is used to set the default selected value in a ComboBox?</h3>
+    <div class="options">
+        <label><input type="radio" name="q36" value="a"> a) setValue(T value)</label>
+        <label><input type="radio" name="q36" value="b"> b) select(T value)</label>
+        <label><input type="radio" name="q36" value="c"> c) setSelectedItem(T value)</label>
+        <label><input type="radio" name="q36" value="d"> d) setDefault(T value)</label>
+    </div>
+    <div class="answer-box" id="answer36" data-correct-answer="a">Correct Answer: a) setValue(T value)</div>
+</div>
+
+<div class="question">
+    <h3>37. Which property allows a ComboBox to define the number of visible rows in the dropdown?</h3>
+    <div class="options">
+        <label><input type="radio" name="q37" value="a"> a) setRowCount(int value)</label>
+        <label><input type="radio" name="q37" value="b"> b) setVisibleRowCount(int value)</label>
+        <label><input type="radio" name="q37" value="c"> c) setMaxItems(int value)</label>
+        <label><input type="radio" name="q37" value="d"> d) setPopupSize(int value)</label>
+    </div>
+    <div class="answer-box" id="answer37" data-correct-answer="b">Correct Answer: b) setVisibleRowCount(int value)</div>
+</div>
+
+<div class="question">
+    <h3>38. What is one advantage of using a ComboBox?</h3>
+    <div class="options">
+        <label><input type="radio" name="q38" value="a"> a) Allows multiple selections</label>
+        <label><input type="radio" name="q38" value="b"> b) Eliminates the need for data validation</label>
+        <label><input type="radio" name="q38" value="c"> c) Accepts any user input</label>
+        <label><input type="radio" name="q38" value="d"> d) Can only store integer values</label>
+    </div>
+    <div class="answer-box" id="answer38" data-correct-answer="b">Correct Answer: b) Eliminates the need for data validation</div>
+</div>
+
+<div class="question">
+    <h3>39. What is the key difference between ListView and ComboBox?</h3>
+    <div class="options">
+        <label><input type="radio" name="q39" value="a"> a) ListView allows only single selection, while ComboBox allows multiple selections</label>
+        <label><input type="radio" name="q39" value="b"> b) ComboBox is used for text input, while ListView is not</label>
+        <label><input type="radio" name="q39" value="c"> c) ListView allows both single and multiple selections, whereas ComboBox allows only one selection at a time</label>
+        <label><input type="radio" name="q39" value="d"> d) ComboBox is part of ListView</label>
+    </div>
+    <div class="answer-box" id="answer39" data-correct-answer="c">Correct Answer: c) ListView allows both single and multiple selections, whereas ComboBox allows only one selection at a time</div>
+</div>
+
+<div class="question">
+    <h3>40. Which property in ListView allows multiple selections?</h3>
+    <div class="options">
+        <label><input type="radio" name="q40" value="a"> a) setMultiSelect(true)</label>
+        <label><input type="radio" name="q40" value="b"> b) setSelectionMode(SelectionMode.MULTIPLE)</label>
+        <label><input type="radio" name="q40" value="c"> c) setAllowMultipleSelections(true)</label>
+        <label><input type="radio" name="q40" value="d"> d) enableMultiChoice()</label>
+    </div>
+    <div class="answer-box" id="answer40" data-correct-answer="b">Correct Answer: b) setSelectionMode(SelectionMode.MULTIPLE)</div>
+</div>
+
+<div class="question">
+    <h3>41. Which method is used to retrieve selected items from a ListView?</h3>
+    <div class="options">
+        <label><input type="radio" name="q41" value="a"> a) getSelectionModel().getSelectedItems()</label>
+        <label><input type="radio" name="q41" value="b"> b) getSelectedValues()</label>
+        <label><input type="radio" name="q41" value="c"> c) getSelectedItemList()</label>
+        <label><input type="radio" name="q41" value="d"> d) getSelectionList()</label>
+    </div>
+    <div class="answer-box" id="answer41" data-correct-answer="a">Correct Answer: a) getSelectionModel().getSelectedItems()</div>
+</div>
+
+<div class="question">
+    <h3>42. Which constructor creates a ListView with predefined items?</h3>
+    <div class="options">
+        <label><input type="radio" name="q42" value="a"> a) ListView()</label>
+        <label><input type="radio" name="q42" value="b"> b) ListView(ObservableList<T> items)</label>
+        <label><input type="radio" name="q42" value="c"> c) ListView(List<T> items)</label>
+        <label><input type="radio" name="q42" value="d"> d) ListView(String... items)</label>
+    </div>
+    <div class="answer-box" id="answer42" data-correct-answer="b">Correct Answer: b) ListView(ObservableList<T> items)</div>
+</div>
+
+<div class="question">
+    <h3>43. Which method sets the orientation (horizontal/vertical) of a ListView?</h3>
+    <div class="options">
+        <label><input type="radio" name="q43" value="a"> a) setDirection()</label>
+        <label><input type="radio" name="q43" value="b"> b) setOrientation(Orientation value)</label>
+        <label><input type="radio" name="q43" value="c"> c) setLayout()</label>
+        <label><input type="radio" name="q43" value="d"> d) setListViewMode()</label>
+    </div>
+    <div class="answer-box" id="answer43" data-correct-answer="b">Correct Answer: b) setOrientation(Orientation value)</div>
+</div>
+
+<div class="question">
+    <h3>44. Which method is used to set the minimum value of a ScrollBar in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q44" value="a"> a) setMinimum(double value)</label>
+        <label><input type="radio" name="q44" value="b"> b) setMin(double value)</label>
+        <label><input type="radio" name="q44" value="c"> c) setLowerBound(double value)</label>
+        <label><input type="radio" name="q44" value="d"> d) setStartValue(double value)</label>
+    </div>
+    <div class="answer-box" id="answer44" data-correct-answer="b">Correct Answer: b) setMin(double value)</div>
+</div>
+
+<div class="question">
+    <h3>45. Which method defines the maximum value a ScrollBar can have?</h3>
+    <div class="options">
+        <label><input type="radio" name="q45" value="a"> a) setMaxValue(double value)</label>
+        <label><input type="radio" name="q45" value="b"> b) setUpperLimit(double value)</label>
+        <label><input type="radio" name="q45" value="c"> c) setMax(double value)</label>
+        <label><input type="radio" name="q45" value="d"> d) setScrollLimit(double value)</label>
+    </div>
+    <div class="answer-box" id="answer45" data-correct-answer="c">Correct Answer: c) setMax(double value)</div>
+</div>
+
+<div class="question">
+    <h3>46. Which method is used to set the initial value of a ScrollBar?</h3>
+    <div class="options">
+        <label><input type="radio" name="q46" value="a"> a) setDefaultValue(double value)</label>
+        <label><input type="radio" name="q46" value="b"> b) setScrollValue(double value)</label>
+        <label><input type="radio" name="q46" value="c"> c) setValue(double value)</label>
+        <label><input type="radio" name="q46" value="d"> d) setStartPosition(double value)</label>
+    </div>
+    <div class="answer-box" id="answer46" data-correct-answer="c">Correct Answer: c) setValue(double value)</div>
+</div>
+
+<div class="question">
+    <h3>47. Which method sets the step size when clicking the small arrows on a ScrollBar?</h3>
+    <div class="options">
+        <label><input type="radio" name="q47" value="a"> a) setStepSize(double value)</label>
+        <label><input type="radio" name="q47" value="b"> b) setUnitIncrement(double value)</label>
+        <label><input type="radio" name="q47" value="c"> c) setSmallStep(double value)</label>
+        <label><input type="radio" name="q47" value="d"> d) setIncrementValue(double value)</label>
+    </div>
+    <div class="answer-box" id="answer47" data-correct-answer="b">Correct Answer: b) setUnitIncrement(double value)</div>
+</div>
+
+<div class="question">
+    <h3>48. Which method sets the step size when clicking on the ScrollBar track (outside the thumb)?</h3>
+    <div class="options">
+        <label><input type="radio" name="q48" value="a"> a) setJumpIncrement(double value)</label>
+        <label><input type="radio" name="q48" value="b"> b) setLargeStep(double value)</label>
+        <label><input type="radio" name="q48" value="c"> c) setBlockIncrement(double value)</label>
+        <label><input type="radio" name="q48" value="d"> d) setTrackValue(double value)</label>
+    </div>
+    <div class="answer-box" id="answer48" data-correct-answer="c">Correct Answer: c) setBlockIncrement(double value)</div>
+</div>
+
+<div class="question">
+    <h3>49. Which property allows you to track value changes in a ScrollBar dynamically?</h3>
+    <div class="options">
+        <label><input type="radio" name="q49" value="a"> a) scrollValueProperty()</label>
+        <label><input type="radio" name="q49" value="b"> b) valueProperty()</label>
+        <label><input type="radio" name="q49" value="c"> c) trackChangesProperty()</label>
+        <label><input type="radio" name="q49" value="d"> d) scrollListener()</label>
+    </div>
+    <div class="answer-box" id="answer49" data-correct-answer="b">Correct Answer: b) valueProperty()</div>
+</div>
+
+<div class="question">
+    <h3>50. Which property in Slider determines whether labels for tick marks are displayed?</h3>
+    <div class="options">
+        <label><input type="radio" name="q50" value="a"> a) showTickMarksProperty()</label>
+        <label><input type="radio" name="q50" value="b"> b) showTickLabelsProperty()</label>
+        <label><input type="radio" name="q50" value="c"> c) setTickLabelsVisible(boolean value)</label>
+        <label><input type="radio" name="q50" value="d"> d) setLabelVisibility(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer50" data-correct-answer="b">Correct Answer: b) showTickLabelsProperty()</div>
+</div>
+
+<div class="question">
+    <h3>51. Which method sets the step size for major tick marks on a Slider?</h3>
+    <div class="options">
+        <label><input type="radio" name="q51" value="a"> a) setMajorTickUnit(double value)</label>
+        <label><input type="radio" name="q51" value="b"> b) setTickSpacing(double value)</label>
+        <label><input type="radio" name="q51" value="c"> c) setTickUnit(double value)</label>
+        <label><input type="radio" name="q51" value="d"> d) setStepSize(double value)</label>
+    </div>
+    <div class="answer-box" id="answer51" data-correct-answer="a">Correct Answer: a) setMajorTickUnit(double value)</div>
+</div>
+
+<div class="question">
+    <h3>52. Which property defines the number of minor ticks between two major tick marks?</h3>
+    <div class="options">
+        <label><input type="radio" name="q52" value="a"> a) setMinorTickCount(int value)</label>
+        <label><input type="radio" name="q52" value="b"> b) setSmallTickSpacing(int value)</label>
+        <label><input type="radio" name="q52" value="c"> c) setMinorStepSize(int value)</label>
+        <label><input type="radio" name="q52" value="d"> d) setTickSubdivisions(int value)</label>
+    </div>
+    <div class="answer-box" id="answer52" data-correct-answer="a">Correct Answer: a) setMinorTickCount(int value)</div>
+</div>
+
+<div class="question">
+    <h3>53. Which method enables showing tick marks on a Slider?</h3>
+    <div class="options">
+        <label><input type="radio" name="q53" value="a"> a) setShowTicks(boolean value)</label>
+        <label><input type="radio" name="q53" value="b"> b) setTickMarksVisible(boolean value)</label>
+        <label><input type="radio" name="q53" value="c"> c) setShowTickMarks(boolean value)</label>
+        <label><input type="radio" name="q53" value="d"> d) enableTicks(boolean value)</label>
+    </div>
+    <div class="answer-box" id="answer53" data-correct-answer="c">Correct Answer: c) setShowTickMarks(boolean value)</div>
+</div>
+
+<div class="question">
+    <h3>54. Which JavaFX class is used to obtain the source of media (audio/video)?</h3>
+    <div class="options">
+        <label><input type="radio" name="q54" value="a"> a) MediaView</label>
+        <label><input type="radio" name="q54" value="b"> b) Media</label>
+        <label><input type="radio" name="q54" value="c"> c) MediaPlayer</label>
+        <label><input type="radio" name="q54" value="d"> d) MediaControl</label>
+    </div>
+    <div class="answer-box" id="answer54" data-correct-answer="b">Correct Answer: b) Media</div>
+</div>
+
+<div class="question">
+    <h3>55. Which JavaFX class is responsible for playing and controlling media?</h3>
+    <div class="options">
+        <label><input type="radio" name="q55" value="a"> a) MediaController</label>
+        <label><input type="radio" name="q55" value="b"> b) MediaPlayer</label>
+        <label><input type="radio" name="q55" value="c"> c) MediaView</label>
+        <label><input type="radio" name="q55" value="d"> d) MediaSource</label>
+    </div>
+    <div class="answer-box" id="answer55" data-correct-answer="b">Correct Answer: b) MediaPlayer</div>
+</div>
+
+<div class="question">
+    <h3>56. Which class is used to display video content in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q56" value="a"> a) VideoView</label>
+        <label><input type="radio" name="q56" value="b"> b) MediaPlayer</label>
+        <label><input type="radio" name="q56" value="c"> c) MediaView</label>
+        <label><input type="radio" name="q56" value="d"> d) MediaDisplay</label>
+    </div>
+    <div class="answer-box" id="answer56" data-correct-answer="c">Correct Answer: c) MediaView</div>
+</div>
+
+<div class="question">
+    <h3>57. What is event-driven programming?</h3>
+    <div class="options">
+        <label><input type="radio" name="q57" value="a"> a) A programming paradigm based on the sequential flow of operations.</label>
+        <label><input type="radio" name="q57" value="b"> b) A programming paradigm where program execution is determined by events.</label>
+        <label><input type="radio" name="q57" value="c"> c) A method for optimizing database performance.</label>
+        <label><input type="radio" name="q57" value="d"> d) A style of writing code using recursion.</label>
+    </div>
+    <div class="answer-box" id="answer57" data-correct-answer="b">Correct Answer: b) A programming paradigm where program execution is determined by events.</div>
+</div>
+
+<div class="question">
+    <h3>58. Which of the following is an example of a user-generated event?</h3>
+    <div class="options">
+        <label><input type="radio" name="q58" value="a"> a) A loop execution</label>
+        <label><input type="radio" name="q58" value="b"> b) A database query</label>
+        <label><input type="radio" name="q58" value="c"> c) A mouse click</label>
+        <label><input type="radio" name="q58" value="d"> d) A variable assignment</label>
+    </div>
+    <div class="answer-box" id="answer58" data-correct-answer="c">Correct Answer: c) A mouse click</div>
+</div>
+
+<div class="question">
+    <h3>59. In JavaFX, what is an event source?</h3>
+    <div class="options">
+        <label><input type="radio" name="q59" value="a"> a) The component that processes the event.</label>
+        <label><input type="radio" name="q59" value="b"> b) The object that creates and fires the event.</label>
+        <label><input type="radio" name="q59" value="c"> c) The method handling the event.</label>
+        <label><input type="radio" name="q59" value="d"> d) The class containing the main method.</label>
+    </div>
+    <div class="answer-box" id="answer59" data-correct-answer="b">Correct Answer: b) The object that creates and fires the event.</div>
+</div>
+
+<div class="question">
+    <h3>60. What is an event handler in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q60" value="a"> a) A database connector</label>
+        <label><input type="radio" name="q60" value="b"> b) An interface for network communication</label>
+        <label><input type="radio" name="q60" value="c"> c) An object that processes events fired from an event source</label>
+        <label><input type="radio" name="q60" value="d"> d) A class that creates UI elements</label>
+    </div>
+    <div class="answer-box" id="answer60" data-correct-answer="c">Correct Answer: c) An object that processes events fired from an event source</div>
+</div>
+
+<div class="question">
+    <h3>61. What type of event is fired when a button is clicked in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q61" value="a"> a) KeyEvent</label>
+        <label><input type="radio" name="q61" value="b"> b) ActionEvent</label>
+        <label><input type="radio" name="q61" value="c"> c) MouseEvent</label>
+        <label><input type="radio" name="q61" value="d"> d) PropertyEvent</label>
+    </div>
+    <div class="answer-box" id="answer61" data-correct-answer="b">Correct Answer: b) ActionEvent</div>
+</div>
+
+<div class="question">
+    <h3>62. Which event is fired when a key is pressed in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q62" value="a"> a) KeyEvent</label>
+        <label><input type="radio" name="q62" value="b"> b) ActionEvent</label>
+        <label><input type="radio" name="q62" value="c"> c) MouseEvent</label>
+        <label><input type="radio" name="q62" value="d"> d) PropertyEvent</label>
+    </div>
+    <div class="answer-box" id="answer62" data-correct-answer="a">Correct Answer: a) KeyEvent</div>
+</div>
+
+<div class="question">
+    <h3>63. Which event is fired when a mouse button is clicked in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q63" value="a"> a) KeyEvent</label>
+        <label><input type="radio" name="q63" value="b"> b) ActionEvent</label>
+        <label><input type="radio" name="q63" value="c"> c) MouseEvent</label>
+        <label><input type="radio" name="q63" value="d"> d) PropertyEvent</label>
+    </div>
+    <div class="answer-box" id="answer63" data-correct-answer="c">Correct Answer: c) MouseEvent</div>
+</div>
+
+<div class="question">
+    <h3>64. What does the following code represent in JavaFX event handling?</h3>
+    <pre> setOnAction(e -> { /* code */ }); </pre>
+    <div class="options">
+        <label><input type="radio" name="q64" value="a"> a) Anonymous Inner Class</label>
+        <label><input type="radio" name="q64" value="b"> b) Lambda Expression</label>
+        <label><input type="radio" name="q64" value="c"> c) Inner Class</label>
+        <label><input type="radio" name="q64" value="d"> d) Event Source</label>
+    </div>
+    <div class="answer-box" id="answer64" data-correct-answer="b">Correct Answer: b) Lambda Expression</div>
+</div>
+
+<div class="question">
+    <h3>65. What does the following code represent in JavaFX event handling?</h3>
+    <pre> new EventHandler<ActionEvent>() { public void handle(ActionEvent e) { /* code */ } };</pre>
+    <div class="options">
+        <label><input type="radio" name="q65" value="a"> a) Anonymous Inner Class</label>
+        <label><input type="radio" name="q65" value="b"> b) Lambda Expression</label>
+        <label><input type="radio" name="q65" value="c"> c) Inner Class</label>
+        <label><input type="radio" name="q65" value="d"> d) Event Source</label>
+    </div>
+    <div class="answer-box" id="answer65" data-correct-answer="a">Correct Answer: a) Anonymous Inner Class</div>
+</div>
+
+<div class="question">
+    <h3>66. What does the following code represent in JavaFX event handling?</h3>
+    <pre> class MyHandler implements EventHandler<ActionEvent> { public void handle(ActionEvent e) { /* code */ } }</pre>
+    <div class="options">
+        <label><input type="radio" name="q66" value="a"> a) Lambda Expression</label>
+        <label><input type="radio" name="q66" value="b"> b) Anonymous Inner Class</label>
+        <label><input type="radio" name="q66" value="c"> c) Inner Class</label>
+        <label><input type="radio" name="q66" value="d"> d) Event Source</label>
+    </div>
+    <div class="answer-box" id="answer66" data-correct-answer="c">Correct Answer: c) Inner Class</div>
+</div>
+
+<div class="question">
+    <h3>67. Which objects can fire an ActionEvent in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q67" value="a"> a) Scene and Node</label>
+        <label><input type="radio" name="q67" value="b"> b) TextField, ComboBoxBase, and ButtonBase</label>
+        <label><input type="radio" name="q67" value="c"> c) Stage and Scene</label>
+        <label><input type="radio" name="q67" value="d"> d) Mouse and Keyboard</label>
+    </div>
+    <div class="answer-box" id="answer67" data-correct-answer="b">Correct Answer: b) TextField, ComboBoxBase, and ButtonBase</div>
+</div>
+
+<div class="question">
+    <h3>68. Which two events can be fired by Scene and Node objects?</h3>
+    <div class="options">
+        <label><input type="radio" name="q68" value="a"> a) WindowEvent and ActionEvent</label>
+        <label><input type="radio" name="q68" value="b"> b) MouseEvent and KeyEvent</label>
+        <label><input type="radio" name="q68" value="c"> c) PropertyEvent and WindowEvent</label>
+        <label><input type="radio" name="q68" value="d"> d) InputEvent and SceneEvent</label>
+    </div>
+    <div class="answer-box" id="answer68" data-correct-answer="b">Correct Answer: b) MouseEvent and KeyEvent</div>
+</div>
+
+<div class="question">
+    <h3>69. What is an example of a source object for an ActionEvent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q69" value="a"> a) Node</label>
+        <label><input type="radio" name="q69" value="b"> b) Button</label>
+        <label><input type="radio" name="q69" value="c"> c) Scene</label>
+        <label><input type="radio" name="q69" value="d"> d) Mouse</label>
+    </div>
+    <div class="answer-box" id="answer69" data-correct-answer="b">Correct Answer: b) Button</div>
+</div>
+
+<div class="question">
+    <h3>70. What is an example of a source object for a MouseEvent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q70" value="a"> a) Node, Scene</label>
+        <label><input type="radio" name="q70" value="b"> b) Button</label>
+        <label><input type="radio" name="q70" value="c"> c) ComboBox</label>
+        <label><input type="radio" name="q70" value="d"> d) CheckBox</label>
+    </div>
+    <div class="answer-box" id="answer70" data-correct-answer="a">Correct Answer: a) Node, Scene</div>
+</div>
+
+<div class="question">
+    <h3>71. Which method registers an event handler for key presses?</h3>
+    <div class="options">
+        <label><input type="radio" name="q71" value="a"> a) setOnMouseClicked()</label>
+        <label><input type="radio" name="q71" value="b"> b) setOnAction()</label>
+        <label><input type="radio" name="q71" value="c"> c) setOnKeyPressed()</label>
+        <label><input type="radio" name="q71" value="d"> d) setOnMouseEntered()</label>
+    </div>
+    <div class="answer-box" id="answer71" data-correct-answer="c">Correct Answer: c) setOnKeyPressed()</div>
+</div>
+
+<div class="question">
+    <h3>72. What method registers a handler for a mouse press event?</h3>
+    <div class="options">
+        <label><input type="radio" name="q72" value="a"> a) setOnAction()</label>
+        <label><input type="radio" name="q72" value="b"> b) setOnMousePressed()</label>
+        <label><input type="radio" name="q72" value="c"> c) setOnMouseClicked()</label>
+        <label><input type="radio" name="q72" value="d"> d) setOnKeyTyped()</label>
+    </div>
+    <div class="answer-box" id="answer72" data-correct-answer="b">Correct Answer: b) setOnMousePressed()</div>
+</div>
+
+<div class="question">
+    <h3>73. What is the advantage of using lambda expressions in JavaFX event handling?</h3>
+    <div class="options">
+        <label><input type="radio" name="q73" value="a"> a) Longer code</label>
+        <label><input type="radio" name="q73" value="b"> b) Faster compilation</label>
+        <label><input type="radio" name="q73" value="c"> c) Shorter, cleaner, and more readable code</label>
+        <label><input type="radio" name="q73" value="d"> d) Reduced memory usage</label>
+    </div>
+    <div class="answer-box" id="answer73" data-correct-answer="c">Correct Answer: c) Shorter, cleaner, and more readable code</div>
+</div>
+
+<div class="question">
+    <h3>74. What is a Single Abstract Method (SAM) interface?</h3>
+    <div class="options">
+        <label><input type="radio" name="q74" value="a"> a) An interface with multiple methods</label>
+        <label><input type="radio" name="q74" value="b"> b) An interface with exactly one abstract method</label>
+        <label><input type="radio" name="q74" value="c"> c) A class that implements all methods</label>
+        <label><input type="radio" name="q74" value="d"> d) A method with no parameters</label>
+    </div>
+    <div class="answer-box" id="answer74" data-correct-answer="b">Correct Answer: b) An interface with exactly one abstract method</div>
+</div>
+
+<div class="question">
+    <h3>75. Which method in JavaFX is used to handle property changes?</h3>
+    <div class="options">
+        <label><input type="radio" name="q75" value="a"> a) setOnPropertyChanged()</label>
+        <label><input type="radio" name="q75" value="b"> b) addListener()</label>
+        <label><input type="radio" name="q75" value="c"> c) handlePropertyChange()</label>
+        <label><input type="radio" name="q75" value="d"> d) setPropertyHandler()</label>
+    </div>
+    <div class="answer-box" id="answer75" data-correct-answer="b">Correct Answer: b) addListener()</div>
+</div>
+
+<div class="question">
+    <h3>76. What is the role of a change listener in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q76" value="a"> a) It triggers when the value of a property needs to be recalculated.</label>
+        <label><input type="radio" name="q76" value="b"> b) It triggers when the property value changes.</label>
+        <label><input type="radio" name="q76" value="c"> c) It triggers when a button is clicked.</label>
+        <label><input type="radio" name="q76" value="d"> d) It handles database queries.</label>
+    </div>
+    <div class="answer-box" id="answer76" data-correct-answer="b">Correct Answer: b) It triggers when the property value changes.</div>
+</div>
+
+<div class="question">
+    <h3>77. What method is used to detect which mouse button was pressed?</h3>
+    <div class="options">
+        <label><input type="radio" name="q77" value="a"> a) getMouseType()</label>
+        <label><input type="radio" name="q77" value="b"> b) getClickType()</label>
+        <label><input type="radio" name="q77" value="c"> c) getButton()</label>
+        <label><input type="radio" name="q77" value="d"> d) getMouseEvent()</label>
+    </div>
+    <div class="answer-box" id="answer77" data-correct-answer="c">Correct Answer: c) getButton()</div>
+</div>
+
+<div class="question">
+    <h3>78. Which method checks if the Shift key was pressed during a MouseEvent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q78" value="a"> a) isAltDown()</label>
+        <label><input type="radio" name="q78" value="b"> b) isShiftDown()</label>
+        <label><input type="radio" name="q78" value="c"> c) isCtrlDown()</label>
+        <label><input type="radio" name="q78" value="d"> d) isMetaDown()</label>
+    </div>
+    <div class="answer-box" id="answer78" data-correct-answer="b">Correct Answer: b) isShiftDown()</div>
+</div>
+
+<div class="question">
+    <h3>79. Which constant represents the left mouse button in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q79" value="a"> a) MouseButton.LEFT</label>
+        <label><input type="radio" name="q79" value="b"> b) MouseButton.PRIMARY</label>
+        <label><input type="radio" name="q79" value="c"> c) MouseButton.RIGHT</label>
+        <label><input type="radio" name="q79" value="d"> d) MouseButton.SECONDARY</label>
+    </div>
+    <div class="answer-box" id="answer79" data-correct-answer="b">Correct Answer: b) MouseButton.PRIMARY</div>
+</div>
+
+<div class="question">
+    <h3>80. What does the getClickCount() method return in a MouseEvent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q80" value="a"> a) The type of mouse event</label>
+        <label><input type="radio" name="q80" value="b"> b) The number of times the mouse was clicked</label>
+        <label><input type="radio" name="q80" value="c"> c) The x-coordinate of the mouse pointer</label>
+        <label><input type="radio" name="q80" value="d"> d) The button that was clicked</label>
+    </div>
+    <div class="answer-box" id="answer80" data-correct-answer="b">Correct Answer: b) The number of times the mouse was clicked</div>
+</div>
+
+<div class="question">
+    <h3>81. What is the correct way to check if the Enter key was pressed?</h3>
+    <div class="options">
+        <label><input type="radio" name="q81" value="a"> a) if (getCode() == "Enter")</label>
+        <label><input type="radio" name="q81" value="b"> b) if (getCode() == KeyCode.ENTER)</label>
+        <label><input type="radio" name="q81" value="c"> c) if (e.getCode() == KeyCode.ENTER)</label>
+        <label><input type="radio" name="q81" value="d"> d) if (e.getText() == "Enter")</label>
+    </div>
+    <div class="answer-box" id="answer81" data-correct-answer="c">Correct Answer: c) if (e.getCode() == KeyCode.ENTER)</div>
+</div>
+
+<div class="question">
+    <h3>82. Which of the following is NOT a valid KeyCode constant?</h3>
+    <div class="options">
+        <label><input type="radio" name="q82" value="a"> a) ENTER</label>
+        <label><input type="radio" name="q82" value="b"> b) SHIFT</label>
+        <label><input type="radio" name="q82" value="c"> c) CONTROL</label>
+        <label><input type="radio" name="q82" value="d"> d) KEYBOARD_DOWN</label>
+    </div>
+    <div class="answer-box" id="answer82" data-correct-answer="d">Correct Answer: d) KEYBOARD_DOWN</div>
+</div>
+
+<div class="question">
+    <h3>83. Why do we need to link setOnKeyPressed with scene?</h3>
+    <div class="options">
+        <label><input type="radio" name="q83" value="a"> a) To capture key events anywhere in the scene</label>
+        <label><input type="radio" name="q83" value="b"> b) To handle mouse events</label>
+        <label><input type="radio" name="q83" value="c"> c) To detect clicks on buttons</label>
+        <label><input type="radio" name="q83" value="d"> d) To change the scene size</label>
+    </div>
+    <div class="answer-box" id="answer83" data-correct-answer="a">Correct Answer: a) To capture key events anywhere in the scene</div>
+</div>
+
+<div class="question">
+    <h3>84. Which method is used to bind a target property to a source property in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q84" value="a"> a) attach()</label>
+        <label><input type="radio" name="q84" value="b"> b) link()</label>
+        <label><input type="radio" name="q84" value="c"> c) bind()</label>
+        <label><input type="radio" name="q84" value="d"> d) connect()</label>
+    </div>
+    <div class="answer-box" id="answer84" data-correct-answer="c">Correct Answer: c) bind()</div>
+</div>
+
+<div class="question">
+    <h3>85. Which method is used to link two properties so they update each other in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q85" value="a"> a) join()</label>
+        <label><input type="radio" name="q85" value="b"> b) sync()</label>
+        <label><input type="radio" name="q85" value="c"> c) bindBidirectional()</label>
+        <label><input type="radio" name="q85" value="d"> d) merge()</label>
+    </div>
+    <div class="answer-box" id="answer85" data-correct-answer="c">Correct Answer: c) bindBidirectional()</div>
+</div>
+
+<div class="question">
+    <h3>86. What is the purpose of property binding in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q86" value="a"> a) To enhance the visual appearance of nodes.</label>
+        <label><input type="radio" name="q86" value="b"> b) To bind a source object's value to a target object, so changes in the source automatically update the target.</label>
+        <label><input type="radio" name="q86" value="c"> c) To create animations for nodes in a scene.</label>
+        <label><input type="radio" name="q86" value="d"> d) To manage memory usage of JavaFX applications.</label>
+    </div>
+    <div class="answer-box" id="answer86" data-correct-answer="b">Correct Answer: b) To bind a source object's value to a target object, so changes in the source automatically update the target.</div>
+</div>
+
+<div class="question">
+    <h3>87. What is the key difference between a Change Listener and an Invalidation Listener?</h3>
+    <div class="options">
+        <label><input type="radio" name="q87" value="a"> a) Change Listener gets the old and new values, while Invalidation Listener only detects changes.</label>
+        <label><input type="radio" name="q87" value="b"> b) Invalidation Listener runs first, then Change Listener.</label>
+        <label><input type="radio" name="q87" value="c"> c) They are the same.</label>
+        <label><input type="radio" name="q87" value="d"> d) Invalidation Listener updates properties automatically.</label>
+    </div>
+    <div class="answer-box" id="answer87" data-correct-answer="a">Correct Answer: a) Change Listener gets the old and new values, while Invalidation Listener only detects changes.</div>
+</div>
+
+<div class="question">
+    <h3>88. When does an Invalidation Listener get triggered?</h3>
+    <div class="options">
+        <label><input type="radio" name="q88" value="a"> a) When the property changes but has not been recalculated</label>
+        <label><input type="radio" name="q88" value="b"> b) Only when the program starts</label>
+        <label><input type="radio" name="q88" value="c"> c) After a Change Listener is triggered</label>
+        <label><input type="radio" name="q88" value="d"> d) When a new property is created</label>
+    </div>
+    <div class="answer-box" id="answer88" data-correct-answer="a">Correct Answer: a) When the property changes but has not been recalculated.</div>
+</div>
+
+<div class="question">
+    <h3>89. What are the arguments passed to a Change Listener?</h3>
+    <div class="options">
+        <label><input type="radio" name="q89" value="a"> a) New value, event type, and property name</label>
+        <label><input type="radio" name="q89" value="b"> b) Observable property, old value, and new value</label>
+        <label><input type="radio" name="q89" value="c"> c) Source object, target object, and listener name</label>
+        <label><input type="radio" name="q89" value="d"> d) Property name, event type, and new value</label>
+    </div>
+    <div class="answer-box" id="answer89" data-correct-answer="b">Correct Answer: b) Observable property, old value, and new value</div>
+</div>
+
+<div class="question">
+    <h3>90. What is the argument passed to an Invalidation Listener?</h3>
+    <div class="options">
+        <label><input type="radio" name="q90" value="a"> a) Observable property</label>
+        <label><input type="radio" name="q90" value="b"> b) Old value and new value</label>
+        <label><input type="radio" name="q90" value="c"> c) Event type and property name</label>
+        <label><input type="radio" name="q90" value="d"> d) Target object and listener name</label>
+    </div>
+    <div class="answer-box" id="answer90" data-correct-answer="a">Correct Answer: a) Observable property</div>
+</div>
+
+<div class="question">
+    <h3>91. What type of listener is used in the following code?</h3>
+    <div class="options">
+        <label><input type="radio" name="q91" value="a"> a) Change Listener</label>
+        <label><input type="radio" name="q91" value="b"> b) Invalidation Listener</label>
+        <label><input type="radio" name="q91" value="c"> c) Event Listener</label>
+        <label><input type="radio" name="q91" value="d"> d) Property Binder</label>
+    </div>
+    <div class="answer-box" id="answer91" data-correct-answer="a">Correct Answer: a) Change Listener</div>
+</div>
+
+<div class="question">
+    <h3>92. Which of the following statements best describes JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q92" value="a"> a) A low-level networking protocol used only by Oracle databases.</label>
+        <label><input type="radio" name="q92" value="b"> b) A high-level library for GUI design in Java.</label>
+        <label><input type="radio" name="q92" value="c"> c) A Java API for accessing and manipulating relational databases.</label>
+        <label><input type="radio" name="q92" value="d"> d) A framework exclusively for big data processing.</label>
+    </div>
+    <div class="answer-box" id="answer92" data-correct-answer="c">Correct Answer: c) A Java API for accessing and manipulating relational databases.</div>
+</div>
+
+<div class="question">
+    <h3>93. What does JDBC stand for?</h3>
+    <div class="options">
+        <label><input type="radio" name="q93" value="a"> a) Java Database Communication</label>
+        <label><input type="radio" name="q93" value="b"> b) Java Data Connectivity</label>
+        <label><input type="radio" name="q93" value="c"> c) Java Database Connectivity</label>
+        <label><input type="radio" name="q93" value="d"> d) Java Data Communication</label>
+    </div>
+    <div class="answer-box" id="answer93" data-correct-answer="c">Correct Answer: c) Java Database Connectivity</div>
+</div>
+
+<div class="question">
+    <h3>94. Which of the following is NOT a component of JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q94" value="a"> a) JDBC API</label>
+        <label><input type="radio" name="q94" value="b"> b) JDBC Driver</label>
+        <label><input type="radio" name="q94" value="c"> c) Relational Database</label>
+        <label><input type="radio" name="q94" value="d"> d) JVM Garbage Collector</label>
+    </div>
+    <div class="answer-box" id="answer94" data-correct-answer="d">Correct Answer: d) JVM Garbage Collector</div>
+</div>
+
+<div class="question">
+    <h3>95. Which component of JDBC allows Java programs to interact with relational databases?</h3>
+    <div class="options">
+        <label><input type="radio" name="q95" value="a"> a) JDBC API</label>
+        <label><input type="radio" name="q95" value="b"> b) Java Virtual Machine (JVM)</label>
+        <label><input type="radio" name="q95" value="c"> c) Java GUI Libraries</label>
+        <label><input type="radio" name="q95" value="d"> d) Java Reflection API</label>
+    </div>
+    <div class="answer-box" id="answer95" data-correct-answer="a">Correct Answer: a) JDBC API</div>
+</div>
+
+<div class="question">
+    <h3>96. What is the purpose of the Driver interface in JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q96" value="a"> a) It establishes and manages database connections.</label>
+        <label><input type="radio" name="q96" value="b"> b) It processes SQL queries and returns results.</label>
+        <label><input type="radio" name="q96" value="c"> c) It loads the appropriate JDBC driver to enable database interaction.</label>
+        <label><input type="radio" name="q96" value="d"> d) It executes Java applications in the JVM.</label>
+    </div>
+    <div class="answer-box" id="answer96" data-correct-answer="c">Correct Answer: c) It loads the appropriate JDBC driver to enable database interaction.</div>
+</div>
+
+<div class="question">
+    <h3>97. Which four key interfaces are essential in JDBC for developing database applications?</h3>
+    <div class="options">
+        <label><input type="radio" name="q97" value="a"> a) Driver, Connection, Statement, and ResultSet</label>
+        <label><input type="radio" name="q97" value="b"> b) DriverManager, Transaction, Query, and Executor</label>
+        <label><input type="radio" name="q97" value="c"> c) Database, Connector, Processor, and Table</label>
+        <label><input type="radio" name="q97" value="d"> d) ResultProcessor, QueryHandler, Session, and TableManager</label>
+    </div>
+    <div class="answer-box" id="answer97" data-correct-answer="a">Correct Answer: a) Driver, Connection, Statement, and ResultSet</div>
+</div>
+
+<div class="question">
+    <h3>98. What is the role of ResultSet in JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q98" value="a"> a) It establishes a connection to the database.</label>
+        <label><input type="radio" name="q98" value="b"> b) It executes SQL queries.</label>
+        <label><input type="radio" name="q98" value="c"> c) It stores and processes the results retrieved from a database query.</label>
+        <label><input type="radio" name="q98" value="d"> d) It handles transactions and commits data.</label>
+    </div>
+    <div class="answer-box" id="answer98" data-correct-answer="c">Correct Answer: c) It stores and processes the results retrieved from a database query.</div>
+</div>
+
+<div class="question">
+    <h3>99. The Statement interface in JDBC is responsible for:</h3>
+    <div class="options">
+        <label><input type="radio" name="q99" value="a"> a) Managing database transactions</label>
+        <label><input type="radio" name="q99" value="b"> b) Creating and executing SQL statements</label>
+        <label><input type="radio" name="q99" value="c"> c) Handling database metadata retrieval</label>
+        <label><input type="radio" name="q99" value="d"> d) Loading the JDBC driver</label>
+    </div>
+    <div class="answer-box" id="answer99" data-correct-answer="b">Correct Answer: b) Creating and executing SQL statements</div>
+</div>
+
+<div class="question">
+    <h3>100. In JDBC, what is the correct order of operations for executing an SQL query?</h3>
+    <div class="options">
+        <label><input type="radio" name="q100" value="a"> a) Load driver → Establish connection → Create Statement → Execute SQL → Process results</label>
+        <label><input type="radio" name="q100" value="b"> b) Establish connection → Load driver → Create ResultSet → Execute query</label>
+        <label><input type="radio" name="q100" value="c"> c) Load driver → Create Statement → Establish connection → Execute SQL</label>
+        <label><input type="radio" name="q100" value="d"> d) Execute SQL → Load driver → Establish connection → Process results</label>
+    </div>
+    <div class="answer-box" id="answer100" data-correct-answer="a">Correct Answer: a) Load driver → Establish connection → Create Statement → Execute SQL → Process results</div>
+</div>
+
+<div class="question">
+    <h3>101. What does the Connection interface do in JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q101" value="a"> a) It loads the driver required to connect to the database.</label>
+        <label><input type="radio" name="q101" value="b"> b) It establishes and manages a connection between a Java application and the database.</label>
+        <label><input type="radio" name="q101" value="c"> c) It executes SQL queries and updates records.</label>
+        <label><input type="radio" name="q101" value="d"> d) It retrieves metadata about the database structure.</label>
+    </div>
+    <div class="answer-box" id="answer101" data-correct-answer="b">Correct Answer: b) It establishes and manages a connection between a Java application and the database.</div>
+</div>
+
+<div class="question">
+    <h3>102. Which method is used to explicitly load a JDBC driver?</h3>
+    <div class="options">
+        <label><input type="radio" name="q102" value="a"> a) DriverManager.registerDriver("JDBCDriverClass")</label>
+        <label><input type="radio" name="q102" value="b"> b) Class.forName("JDBCDriverClass")</label>
+        <label><input type="radio" name="q102" value="c"> c) Driver.loadDriver("JDBCDriverClass")</label>
+        <label><input type="radio" name="q102" value="d"> d) DriverManager.load("JDBCDriverClass")</label>
+    </div>
+    <div class="answer-box" id="answer102" data-correct-answer="b">Correct Answer: b) Class.forName("JDBCDriverClass")</div>
+</div>
+
+<div class="question">
+    <h3>103. Which of the following statements is true regarding JDBC drivers and connections?</h3>
+    <div class="options">
+        <label><input type="radio" name="q103" value="a"> a) A single JDBC driver can manage multiple database connections at the same time.</label>
+        <label><input type="radio" name="q103" value="b"> b) Each JDBC driver can only manage one connection at a time.</label>
+        <label><input type="radio" name="q103" value="c"> c) A JDBC connection can handle multiple drivers simultaneously.</label>
+        <label><input type="radio" name="q103" value="d"> d) JDBC does not allow multiple connections to the same database.</label>
+    </div>
+    <div class="answer-box" id="answer103" data-correct-answer="a">Correct Answer: a) A single JDBC driver can manage multiple database connections at the same time.</div>
+</div>
+
+<div class="question">
+    <h3>104. Which of the following is an example of a valid database URL?</h3>
+    <div class="options">
+        <label><input type="radio" name="q104" value="a"> a) jdbc:mysql://localhost:3306/dbname</label>
+        <label><input type="radio" name="q104" value="b"> b) https://mydatabase.com</label>
+        <label><input type="radio" name="q104" value="c"> c) mysql.connect("localhost", "mydatabase")</label>
+        <label><input type="radio" name="q104" value="d"> d) database:localhost;port=3306;name=mydatabase</label>
+    </div>
+    <div class="answer-box" id="answer104" data-correct-answer="a">Correct Answer: a) jdbc:mysql://localhost:3306/dbname</div>
+</div>
+
+<div class="question">
+    <h3>105. Which of the following is required to establish a JDBC connection?</h3>
+    <div class="options">
+        <label><input type="radio" name="q105" value="a"> a) JDBC Driver</label>
+        <label><input type="radio" name="q105" value="b"> b) Database URL</label>
+        <label><input type="radio" name="q105" value="c"> c) Username and Password</label>
+        <label><input type="radio" name="q105" value="d"> d) All of the above</label>
+    </div>
+    <div class="answer-box" id="answer105" data-correct-answer="d">Correct Answer: d) All of the above</div>
+</div>
+
+<div class="question">
+    <h3>106. Which method is used to establish a database connection in JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q106" value="a"> a) DriverManager.registerDriver()</label>
+        <label><input type="radio" name="q106" value="b"> b) DriverManager.getConnection()</label>
+        <label><input type="radio" name="q106" value="c"> c) Connection.createConnection()</label>
+        <label><input type="radio" name="q106" value="d"> d) JDBC.connect()</label>
+    </div>
+    <div class="answer-box" id="answer106" data-correct-answer="b">Correct Answer: b) DriverManager.getConnection()</div>
+</div>
+
+<div class="question">
+    <h3>107. Which JDBC method is used to create a statement object?</h3>
+    <div class="options">
+        <label><input type="radio" name="q107" value="a"> a) Statement stmt = connection.executeStatement();</label>
+        <label><input type="radio" name="q107" value="b"> b) Statement stmt = connection.createStatement();</label>
+        <label><input type="radio" name="q107" value="c"> c) Statement stmt = DriverManager.getStatement();</label>
+        <label><input type="radio" name="q107" value="d"> d) Statement stmt = new Statement(connection);</label>
+    </div>
+    <div class="answer-box" id="answer107" data-correct-answer="b">Correct Answer: b) Statement stmt = connection.createStatement();</div>
+</div>
+
+<div class="question">
+    <h3>108. Which of the following methods is used to execute a SQL SELECT query?</h3>
+    <div class="options">
+        <label><input type="radio" name="q108" value="a"> a) executeUpdate(String sql)</label>
+        <label><input type="radio" name="q108" value="b"> b) executeQuery(String sql)</label>
+        <label><input type="radio" name="q108" value="c"> c) executeStatement(String sql)</label>
+        <label><input type="radio" name="q108" value="d"> d) execute(String sql)</label>
+    </div>
+    <div class="answer-box" id="answer108" data-correct-answer="b">Correct Answer: b) executeQuery(String sql)</div>
+</div>
+
+<div class="question">
+    <h3>109. Which JDBC method is used to execute SQL statements that modify the database (e.g., INSERT, UPDATE, DELETE)?</h3>
+    <div class="options">
+        <label><input type="radio" name="q109" value="a"> a) executeQuery(String sql)</label>
+        <label><input type="radio" name="q109" value="b"> b) executeUpdate(String sql)</label>
+        <label><input type="radio" name="q109" value="c"> c) executeModify(String sql)</label>
+        <label><input type="radio" name="q109" value="d"> d) executeChange(String sql)</label>
+    </div>
+    <div class="answer-box" id="answer109" data-correct-answer="b">Correct Answer: b) executeUpdate(String sql)</div>
+</div>
+
+<div class="question">
+    <h3>110. Which method moves to the next row in a ResultSet?</h3>
+    <div class="options">
+        <label><input type="radio" name="q110" value="a"> a) resultSet.moveNext();</label>
+        <label><input type="radio" name="q110" value="b"> b) resultSet.forward();</label>
+        <label><input type="radio" name="q110" value="c"> c) resultSet.next();</label>
+        <label><input type="radio" name="q110" value="d"> d) resultSet.getRow();</label>
+    </div>
+    <div class="answer-box" id="answer110" data-correct-answer="c">Correct Answer: c) resultSet.next();</div>
+</div>
+
+<div class="question">
+    <h3>111. Which of the following correctly retrieves the first column's value from a ResultSet?</h3>
+    <div class="options">
+        <label><input type="radio" name="q111" value="a"> a) resultSet.getValue(1);</label>
+        <label><input type="radio" name="q111" value="b"> b) resultSet.getInt(1);</label>
+        <label><input type="radio" name="q111" value="c"> c) resultSet.getString(1);</label>
+        <label><input type="radio" name="q111" value="d"> d) resultSet.fetch(1);</label>
+    </div>
+    <div class="answer-box" id="answer111" data-correct-answer="c">Correct Answer: c) resultSet.getString(1);</div>
+</div>
+
+<div class="question">
+    <h3>112. What is the initial position of a ResultSet before calling .next()?</h3>
+    <div class="options">
+        <label><input type="radio" name="q112" value="a"> a) At the first row</label>
+        <label><input type="radio" name="q112" value="b"> b) At the last row</label>
+        <label><input type="radio" name="q112" value="c"> c) Before the first row</label>
+        <label><input type="radio" name="q112" value="d"> d) After the last row</label>
+    </div>
+    <div class="answer-box" id="answer112" data-correct-answer="c">Correct Answer: c) Before the first row</div>
+</div>
+
+<div class="question">
+    <h3>113. What happens if resultSet.next() is not called before retrieving values?</h3>
+    <div class="options">
+        <label><input type="radio" name="q113" value="a"> a) It will return the first row automatically</label>
+        <label><input type="radio" name="q113" value="b"> b) It will throw a SQLException</label>
+        <label><input type="radio" name="q113" value="c"> c) It will return null values</label>
+        <label><input type="radio" name="q113" value="d"> d) It will move to the last row</label>
+    </div>
+    <div class="answer-box" id="answer113" data-correct-answer="b">Correct Answer: b) It will throw a SQLException</div>
+</div>
+
+<div class="question">
+    <h3>114. In a typical JDBC transaction workflow with setAutoCommit(false), which statement is true?</h3>
+    <div class="options">
+        <label><input type="radio" name="q114" value="a"> a) Each SQL statement is automatically committed.</label>
+        <label><input type="radio" name="q114" value="b"> b) You must explicitly call commit() or rollback() to finish the transaction.</label>
+        <label><input type="radio" name="q114" value="c"> c) No SQL statements can be executed until you turn autocommit back on.</label>
+        <label><input type="radio" name="q114" value="d"> d) Autocommit cannot be changed once the connection is established.</label>
+    </div>
+    <div class="answer-box" id="answer114" data-correct-answer="b">Correct Answer: b) You must explicitly call commit() or rollback() to finish the transaction.</div>
+</div>
+
+<div class="question">
+    <h3>115. What will happen if you forget to set a value for one of the placeholders (?) in PreparedStatement before execution?</h3>
+    <div class="options">
+        <label><input type="radio" name="q115" value="a"> a) The query will execute with NULL values</label>
+        <label><input type="radio" name="q115" value="b"> b) The program will throw an exception</label>
+        <label><input type="radio" name="q115" value="c"> c) The database will automatically assign default values</label>
+        <label><input type="radio" name="q115" value="d"> d) The placeholder will be ignored</label>
+    </div>
+    <div class="answer-box" id="answer115" data-correct-answer="b">Correct Answer: b) The program will throw an exception</div>
+</div>
+
+<div class="question">
+    <h3>116. Suppose you have the following code snippet:</h3>
+    <pre><code>PreparedStatement pstmt = connection.prepareStatement(
+ "INSERT INTO Student (firstName, mi, lastName) VALUES (?, ?, ?)"
+);
+pstmt.setString(1, "Alice");
+pstmt.setString(2, "B");
+pstmt.setString(3, "Cook");
+pstmt.executeUpdate();</code></pre>
+    <h3>What does the ? symbol in the SQL statement represent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q116" value="a"> a) A placeholder that must be set for each parameter before execution.</label>
+        <label><input type="radio" name="q116" value="b"> b) A wildcard that fetches any column in the database.</label>
+        <label><input type="radio" name="q116" value="c"> c) A comment delimiter in SQL.</label>
+        <label><input type="radio" name="q116" value="d"> d) A syntax error in standard SQL.</label>
+    </div>
+    <div class="answer-box" id="answer116" data-correct-answer="a">Correct Answer: a) A placeholder that must be set for each parameter before execution.</div>
+</div>
+
+<div class="question">
+    <h3>117. Which of the following is a benefit of using PreparedStatement over Statement?</h3>
+    <div class="options">
+        <label><input type="radio" name="q117" value="a"> a) Prevents SQL Injection</label>
+        <label><input type="radio" name="q117" value="b"> b) Increases query performance for repeated execution</label>
+        <label><input type="radio" name="q117" value="c"> c) Allows dynamic values in queries</label>
+        <label><input type="radio" name="q117" value="d"> d) All of the above</label>
+    </div>
+    <div class="answer-box" id="answer117" data-correct-answer="d">Correct Answer: d) All of the above</div>
+</div>
+
+<div class="question">
+    <h3>118. How do you properly close a database connection in JDBC?</h3>
+    <div class="options">
+        <label><input type="radio" name="q118" value="a"> a) connection.stop();</label>
+        <label><input type="radio" name="q118" value="b"> b) connection.terminate();</label>
+        <label><input type="radio" name="q118" value="c"> c) connection.close();</label>
+        <label><input type="radio" name="q118" value="d"> d) connection.shutdown();</label>
+    </div>
+    <div class="answer-box" id="answer118" data-correct-answer="c">Correct Answer: c) connection.close();</div>
+</div>
+
+<div class="question">
+    <h3>119. What is the purpose of closing JDBC resources (ResultSet, Statement, Connection)?</h3>
+    <div class="options">
+        <label><input type="radio" name="q119" value="a"> a) To free up database and system resources</label>
+        <label><input type="radio" name="q119" value="b"> b) To speed up query execution</label>
+        <label><input type="radio" name="q119" value="c"> c) To prevent SQL Injection attacks</label>
+        <label><input type="radio" name="q119" value="d"> d) To automatically commit all transactions</label>
+    </div>
+    <div class="answer-box" id="answer119" data-correct-answer="a">Correct Answer: a) To free up database and system resources</div>
+</div>
+
+<div class="question">
+    <h3>120. What does the Java Collection Framework represent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q120" value="a"> a) A framework for managing memory allocation</label>
+        <label><input type="radio" name="q120" value="b"> b) A unified architecture for storing and manipulating a group of objects</label>
+        <label><input type="radio" name="q120" value="c"> c) A tool for network communication in Java</label>
+        <label><input type="radio" name="q120" value="d"> d) A mechanism for multithreading in Java</label>
+    </div>
+    <div class="answer-box" id="answer120" data-correct-answer="b">Correct Answer: b) A unified architecture for storing and manipulating a group of objects</div>
+</div>
+
+<div class="question">
+    <h3>121. What does the Java Collection Framework include?</h3>
+    <div class="options">
+        <label><input type="radio" name="q121" value="a"> a) Interfaces</label>
+        <label><input type="radio" name="q121" value="b"> b) Implementations (classes)</label>
+        <label><input type="radio" name="q121" value="c"> c) Algorithms</label>
+        <label><input type="radio" name="q121" value="d"> d) All of the above</label>
+    </div>
+    <div class="answer-box" id="answer121" data-correct-answer="d">Correct Answer: d) All of the above</div>
+</div>
+
+<div class="question">
+    <h3>122. Which operations can Java Collections perform on data?</h3>
+    <div class="options">
+        <label><input type="radio" name="q122" value="a"> a) Searching and sorting</label>
+        <label><input type="radio" name="q122" value="b"> b) Insertion and deletion</label>
+        <label><input type="radio" name="q122" value="c"> c) Manipulation</label>
+        <label><input type="radio" name="q122" value="d"> d) All of the above</label>
+    </div>
+    <div class="answer-box" id="answer122" data-correct-answer="d">Correct Answer: d) All of the above</div>
+</div>
+
+<div class="question">
+    <h3>123. What does Java Collection represent?</h3>
+    <div class="options">
+        <label><input type="radio" name="q123" value="a"> a) A single unit of objects</label>
+        <label><input type="radio" name="q123" value="b"> b) A database management system</label>
+        <label><input type="radio" name="q123" value="c"> c) A multithreading framework</label>
+        <label><input type="radio" name="q123" value="d"> d) A network communication tool</label>
+    </div>
+    <div class="answer-box" id="answer123" data-correct-answer="a">Correct Answer: a) A single unit of objects</div>
+</div>
+
+<div class="question">
+    <h3>124. Which of the following is NOT an interface in the Java Collection Framework?</h3>
+    <div class="options">
+        <label><input type="radio" name="q124" value="a"> a) Set</label>
+        <label><input type="radio" name="q124" value="b"> b) List</label>
+        <label><input type="radio" name="q124" value="c"> c) ArrayList</label>
+        <label><input type="radio" name="q124" value="d"> d) Queue</label>
+    </div>
+    <div class="answer-box" id="answer124" data-correct-answer="c">Correct Answer: c) ArrayList</div>
+</div>
+
+<div class="question">
+    <h3>125. Which of the following is NOT a class in the Java Collection Framework?</h3>
+    <div class="options">
+        <label><input type="radio" name="q125" value="a"> a) ArrayList</label>
+        <label><input type="radio" name="q125" value="b"> b) Vector</label>
+        <label><input type="radio" name="q125" value="c"> c) List</label>
+        <label><input type="radio" name="q125" value="d"> d) PriorityQueue</label>
+    </div>
+    <div class="answer-box" id="answer125" data-correct-answer="c">Correct Answer: c) List</div>
+</div>
+
+<div class="question">
+    <h3>126. What is the main difference between List and Set in the Java Collection Framework?</h3>
+    <div class="options">
+        <label><input type="radio" name="q126" value="a"> a) List allows duplicate elements, while Set does not.</label>
+        <label><input type="radio" name="q126" value="b"> b) Set maintains insertion order, while List does not.</label>
+        <label><input type="radio" name="q126" value="c"> c) List is unordered, while Set is always sorted.</label>
+        <label><input type="radio" name="q126" value="d"> d) There is no difference; both store elements the same way.</label>
+    </div>
+    <div class="answer-box" id="answer126" data-correct-answer="a">Correct Answer: a) List allows duplicate elements, while Set does not.</div>
+</div>
+
+<div class="question">
+    <h3>127. What is ObservableList in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q127" value="a"> a) A list that enables listeners to track changes when they occur.</label>
+        <label><input type="radio" name="q127" value="b"> b) A list that prevents modifications.</label>
+        <label><input type="radio" name="q127" value="c"> c) A list that automatically sorts elements.</label>
+        <label><input type="radio" name="q127" value="d"> d) A list that converts data into a set.</label>
+    </div>
+    <div class="answer-box" id="answer127" data-correct-answer="a">Correct Answer: a) A list that enables listeners to track changes when they occur.</div>
+</div>
+
+<div class="question">
+    <h3>128. What is ListChangeListener in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q128" value="a"> a) An interface that receives notifications of changes to an ObservableList.</label>
+        <label><input type="radio" name="q128" value="b"> b) An interface that listens for changes in a Set.</label>
+        <label><input type="radio" name="q128" value="c"> c) An interface that prevents updates to an ObservableList.</label>
+        <label><input type="radio" name="q128" value="d"> d) An interface that converts a list into a queue.</label>
+    </div>
+    <div class="answer-box" id="answer128" data-correct-answer="a">Correct Answer: a) An interface that receives notifications of changes to an ObservableList.</div>
+</div>
+
+<div class="question">
+    <h3>129. What is the purpose of the FXCollections class in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q129" value="a"> a) It provides utility methods for working with JavaFX collections.</label>
+        <label><input type="radio" name="q129" value="b"> b) It replaces standard Java Collection classes.</label>
+        <label><input type="radio" name="q129" value="c"> c) It is an alternative to ArrayList.</label>
+        <label><input type="radio" name="q129" value="d"> d) It only supports immutable collections.</label>
+    </div>
+    <div class="answer-box" id="answer129" data-correct-answer="a">Correct Answer: a) It provides utility methods for working with JavaFX collections.</div>
+</div>
+
+<div class="question">
+    <h3>130. What happens if an item is added to the original list (not observableList)?</h3>
+    <div class="options">
+        <label><input type="radio" name="q130" value="a"> a) The ListChangeListener will detect the change.</label>
+        <label><input type="radio" name="q130" value="b"> b) The item is added, but the listener will NOT detect the change.</label>
+        <label><input type="radio" name="q130" value="c"> c) The program will crash.</label>
+        <label><input type="radio" name="q130" value="d"> d) The list becomes read-only.</label>
+    </div>
+    <div class="answer-box" id="answer130" data-correct-answer="b">Correct Answer: b) The item is added, but the listener will NOT detect the change.</div>
+</div>
+
+<div class="question">
+    <h3>131. What happens when an item is added to an ObservableList?</h3>
+    <div class="options">
+        <label><input type="radio" name="q131" value="a"> a) The change is detected, and the listener triggers an event.</label>
+        <label><input type="radio" name="q131" value="b"> b) The list updates, but no listener event is triggered.</label>
+        <label><input type="radio" name="q131" value="c"> c) The item is added, but it doesn't affect the list size.</label>
+        <label><input type="radio" name="q131" value="d"> d) The list becomes immutable.</label>
+    </div>
+    <div class="answer-box" id="answer131" data-correct-answer="a">Correct Answer: a) The change is detected, and the listener triggers an event.</div>
+</div>
+
+<div class="question">
+    <h3>132. How do you sort an ObservableList in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q132" value="a"> a) observableList.sort();</label>
+        <label><input type="radio" name="q132" value="b"> b) sort(observableList);</label>
+        <label><input type="radio" name="q132" value="c"> c) FXCollections.sort(observableList);</label>
+        <label><input type="radio" name="q132" value="d"> d) observableList.orderBy();</label>
+    </div>
+    <div class="answer-box" id="answer132" data-correct-answer="c">Correct Answer: c) FXCollections.sort(observableList);</div>
+</div>
+
+<div class="question">
+    <h3>133. What happens when FXCollections.sort(observableList) is used?</h3>
+    <div class="options">
+        <label><input type="radio" name="q133" value="a"> a) It sorts the list and triggers only one change notification.</label>
+        <label><input type="radio" name="q133" value="b"> b) It sorts the list and triggers multiple change notifications.</label>
+        <label><input type="radio" name="q133" value="c"> c) It reverses the order of elements in the list.</label>
+        <label><input type="radio" name="q133" value="d"> d) It removes duplicate elements from the list.</label>
+    </div>
+    <div class="answer-box" id="answer133" data-correct-answer="a">Correct Answer: a) It sorts the list and triggers only one change notification.</div>
+</div>
+
+<div class="question">
+    <h3>134. What does FXCollections.concat() do?</h3>
+    <div class="options">
+        <label><input type="radio" name="q134" value="a"> a) Merges multiple observable lists into one.</label>
+        <label><input type="radio" name="q134" value="b"> b) Sorts an ObservableList.</label>
+        <label><input type="radio" name="q134" value="c"> c) Removes duplicate elements from a list.</label>
+        <label><input type="radio" name="q134" value="d"> d) Rotates the elements of a list.</label>
+    </div>
+    <div class="answer-box" id="answer134" data-correct-answer="a">Correct Answer: a) Merges multiple observable lists into one.</div>
+</div>
+
+<div class="question">
+    <h3>135. What is the purpose of FXCollections.shuffle()?</h3>
+    <div class="options">
+        <label><input type="radio" name="q135" value="a"> a) It sorts the list in ascending order.</label>
+        <label><input type="radio" name="q135" value="b"> b) It reverses the order of elements in the list.</label>
+        <label><input type="radio" name="q135" value="c"> c) It randomly rearranges the elements of an observable list.</label>
+        <label><input type="radio" name="q135" value="d"> d) It removes all elements from the list.</label>
+    </div>
+    <div class="answer-box" id="answer135" data-correct-answer="c">Correct Answer: c) It randomly rearranges the elements of an observable list.</div>
+</div>
+
+<div class="question">
+    <h3>136. Which FXCollections method allows you to swap elements based on a specific distance?</h3>
+    <div class="options">
+        <label><input type="radio" name="q136" value="a"> a) FXCollections.reverse()</label>
+        <label><input type="radio" name="q136" value="b"> b) FXCollections.rotate()</label>
+        <label><input type="radio" name="q136" value="c"> c) FXCollections.fill()</label>
+        <label><input type="radio" name="q136" value="d"> d) FXCollections.sort()</label>
+    </div>
+    <div class="answer-box" id="answer136" data-correct-answer="b">Correct Answer: b) FXCollections.rotate()</div>
+</div>
+
+<div class="question">
+    <h3>137. Which FXCollections method replaces all occurrences of an old value with a new value in an ObservableList?</h3>
+    <div class="options">
+        <label><input type="radio" name="q137" value="a"> a) FXCollections.replaceAll()</label>
+        <label><input type="radio" name="q137" value="b"> b) FXCollections.modifyAll()</label>
+        <label><input type="radio" name="q137" value="c"> c) FXCollections.updateAll()</label>
+        <label><input type="radio" name="q137" value="d"> d) FXCollections.changeValues()</label>
+    </div>
+    <div class="answer-box" id="answer137" data-correct-answer="a">Correct Answer: a) FXCollections.replaceAll()</div>
+</div>
+
+<div class="question">
+    <h3>138. What happens when data moves from one ListView control to another?</h3>
+    <div class="options">
+        <label><input type="radio" name="q138" value="a"> a) It only updates visually, but not in the underlying model.</label>
+        <label><input type="radio" name="q138" value="b"> b) The data is permanently deleted from the first control.</label>
+        <label><input type="radio" name="q138" value="c"> c) It moves both visually and in the underlying model.</label>
+        <label><input type="radio" name="q138" value="d"> d) The UI refreshes, but the model remains unchanged.</label>
+    </div>
+    <div class="answer-box" id="answer138" data-correct-answer="c">Correct Answer: c) It moves both visually and in the underlying model.</div>
+</div>
+
+<div class="question">
+    <h3>139. How can you dynamically update a ComboBox in JavaFX when adding new items?</h3>
+    <div class="options">
+        <label><input type="radio" name="q139" value="a"> a) By manually refreshing the ComboBox after each update.</label>
+        <label><input type="radio" name="q139" value="b"> b) By using an ObservableList as the data model for the ComboBox.</label>
+        <label><input type="radio" name="q139" value="c"> c) By restarting the JavaFX application after adding new items.</label>
+        <label><input type="radio" name="q139" value="d"> d) By using a static List instead of an ObservableList.</label>
+    </div>
+    <div class="answer-box" id="answer139" data-correct-answer="b">Correct Answer: b) By using an ObservableList as the data model for the ComboBox.</div>
+</div>
+
+<div class="question">
+    <h3>140. The following statement creates a horizontal slider that has the properties _____.</h3>
+    <pre><code>Slider s = new Slider (0, 100, 50);</code></pre>
+    <div class="options">
+        <label><input type="radio" name="q140" value="a"> a) Height, width, and slope</label>
+        <label><input type="radio" name="q140" value="b"> b) x-, y- coordinates and length</label>
+        <label><input type="radio" name="q140" value="c"> c) spacing, padding, and gap</label>
+        <label><input type="radio" name="q140" value="d"> d) Min, Max, and Value</label>
+    </div>
+    <div class="answer-box" id="answer140" data-correct-answer="d">Correct Answer: d) Min, Max, and Value</div>
+</div>
+
+<div class="question">
+    <h3>141. To create a mutually exclusive relationship between RadioButton controls, you must group them in a ToggleGroup object.</h3>
+    <div class="options">
+        <label><input type="radio" name="q141" value="a"> a) TRUE</label>
+        <label><input type="radio" name="q141" value="b"> b) FALSE</label>
+    </div>
+    <div class="answer-box" id="answer141" data-correct-answer="a">Correct Answer: a) TRUE</div>
+</div>
+
+<div class="question">
+    <h3>142. Which class reports changes in an ObservableList?</h3>
+    <div class="options">
+        <label><input type="radio" name="q142" value="a"> a) ListChangeListener.Change</label>
+        <label><input type="radio" name="q142" value="b"> b) FXCollections</label>
+        <label><input type="radio" name="q142" value="c"> c) ChangeReport</label>
+        <label><input type="radio" name="q142" value="d"> d) ObservableList</label>
+    </div>
+    <div class="answer-box" id="answer142" data-correct-answer="a">Correct Answer: a) ListChangeListener.Change</div>
+</div>
+
+<div class="question">
+    <h3>143. What is multithreading in programming?</h3>
+    <div class="options">
+        <label><input type="radio" name="q143" value="a"> a) A technique that allows a program to execute multiple tasks simultaneously.</label>
+        <label><input type="radio" name="q143" value="b"> b) A method for storing data in memory.</label>
+        <label><input type="radio" name="q143" value="c"> c) A way to create a single execution path in a program.</label>
+        <label><input type="radio" name="q143" value="d"> d) A process that prevents concurrency in applications.</label>
+    </div>
+    <div class="answer-box" id="answer143" data-correct-answer="a">Correct Answer: a) A technique that allows a program to execute multiple tasks simultaneously.</div>
+</div>
+
+<div class="question">
+    <h3>144. What is the main benefit of multithreading?</h3>
+    <div class="options">
+        <label><input type="radio" name="q144" value="a"> a) Increases execution time.</label>
+        <label><input type="radio" name="q144" value="b"> b) Improves efficiency and performance by running tasks concurrently.</label>
+        <label><input type="radio" name="q144" value="c"> c) Makes the program run slower.</label>
+        <label><input type="radio" name="q144" value="d"> d) Prevents resource sharing between tasks.</label>
+    </div>
+    <div class="answer-box" id="answer144" data-correct-answer="b">Correct Answer: b) Improves efficiency and performance by running tasks concurrently.</div>
+</div>
+
+<div class="question">
+    <h3>145. What is a thread in multithreading?</h3>
+    <div class="options">
+        <label><input type="radio" name="q145" value="a"> a) A data structure used for sorting.</label>
+        <label><input type="radio" name="q145" value="b"> b) A basic unit of execution that runs independently in a program.</label>
+        <label><input type="radio" name="q145" value="c"> c) A function that stores temporary data.</label>
+        <label><input type="radio" name="q145" value="d"> d) A process that stops concurrency.</label>
+    </div>
+    <div class="answer-box" id="answer145" data-correct-answer="b">Correct Answer: b) A basic unit of execution that runs independently in a program.</div>
+</div>
+
+<div class="question">
+    <h3>146. What does concurrency mean in multithreading?</h3>
+    <div class="options">
+        <label><input type="radio" name="q146" value="a"> a) Running multiple threads sequentially.</label>
+        <label><input type="radio" name="q146" value="b"> b) The ability to run several threads simultaneously, creating the illusion of parallelism.</label>
+        <label><input type="radio" name="q146" value="c"> c) Running multiple programs on different computers.</label>
+        <label><input type="radio" name="q146" value="d"> d) Preventing multiple threads from executing at the same time.</label>
+    </div>
+    <div class="answer-box" id="answer146" data-correct-answer="b">Correct Answer: b) The ability to run several threads simultaneously, creating the illusion of parallelism.</div>
+</div>
+
+<div class="question">
+    <h3>147. Which of the following is a key benefit of multithreading in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q147" value="a"> a) Improves responsiveness, resource sharing, and scalability.</label>
+        <label><input type="radio" name="q147" value="b"> b) Increases execution time by running tasks sequentially.</label>
+        <label><input type="radio" name="q147" value="c"> c) Prevents efficient use of system resources.</label>
+        <label><input type="radio" name="q147" value="d"> d) Limits the number of tasks that can run concurrently.</label>
+    </div>
+    <div class="answer-box" id="answer147" data-correct-answer="a">Correct Answer: a) Improves responsiveness, resource sharing, and scalability.</div>
+</div>
+
+<div class="question">
+    <h3>148. Which type of applications benefit the most from multithreading?</h3>
+    <div class="options">
+        <label><input type="radio" name="q148" value="a"> a) Applications that require high responsiveness, such as GUI and server-side applications.</label>
+        <label><input type="radio" name="q148" value="b"> b) Programs that execute a single task sequentially.</label>
+        <label><input type="radio" name="q148" value="c"> c) Applications that do not handle multiple client requests.</label>
+        <label><input type="radio" name="q148" value="d"> d) Simple scripts that run only one operation at a time.</label>
+    </div>
+    <div class="answer-box" id="answer148" data-correct-answer="a">Correct Answer: a) Applications that require high responsiveness, such as GUI and server-side applications.</div>
+</div>
+
+<div class="question">
+    <h3>149. The flow of execution from the beginning to the end of a task is called?</h3>
+    <div class="options">
+        <label><input type="radio" name="q149" value="a"> a) Process</label>
+        <label><input type="radio" name="q149" value="b"> b) Thread</label>
+        <label><input type="radio" name="q149" value="c"> c) Function</label>
+        <label><input type="radio" name="q149" value="d"> d) Loop</label>
+    </div>
+    <div class="answer-box" id="answer149" data-correct-answer="b">Correct Answer: b) Thread</div>
+</div>
+
+<div class="question">
+    <h3>150. What does the image illustrate?</h3>
+    <div class="options">
+        <label><input type="radio" name="q150" value="a"> a) A single thread running on one CPU.</label>
+        <label><input type="radio" name="q150" value="b"> b) Multiple threads running sequentially on a single CPU.</label>
+        <label><input type="radio" name="q150" value="c"> c) Multiple threads running on multiple CPUs concurrently.</label>
+        <label><input type="radio" name="q150" value="d"> d) A process with no threads.</label>
+    </div>
+    <div class="answer-box" id="answer150" data-correct-answer="c">Correct Answer: c) Multiple threads running on multiple CPUs concurrently.</div>
+</div>
+
+<div class="question">
+    <h3>151. What does the image illustrate?</h3>
+    <div class="options">
+        <label><input type="radio" name="q151" value="a"> a) Multiple threads running on multiple CPUs in parallel.</label>
+        <label><input type="radio" name="q151" value="b"> b) Multiple threads sharing a single CPU using time slicing.</label>
+        <label><input type="radio" name="q151" value="c"> c) A single-threaded process executing sequentially.</label>
+        <label><input type="radio" name="q151" value="d"> d) A process without any threads.</label>
+    </div>
+    <div class="answer-box" id="answer151" data-correct-answer="b">Correct Answer: b) Multiple threads sharing a single CPU using time slicing.</div>
+</div>
+
+<div class="question">
+    <h3>152. Which of the following are ways to create threads in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q152" value="a"> a) Using the Runnable interface</label>
+        <label><input type="radio" name="q152" value="b"> b) Using the Thread class</label>
+        <label><input type="radio" name="q152" value="c"> c) Both A and B</label>
+        <label><input type="radio" name="q152" value="d"> d) Only by calling start() directly</label>
+    </div>
+    <div class="answer-box" id="answer152" data-correct-answer="c">Correct Answer: c) Both A and B</div>
+</div>
+
+<div class="question">
+    <h3>153. Which method must be implemented when using the Runnable interface?</h3>
+    <div class="options">
+        <label><input type="radio" name="q153" value="a"> a) execute()</label>
+        <label><input type="radio" name="q153" value="b"> b) start()</label>
+        <label><input type="radio" name="q153" value="c"> c) run()</label>
+        <label><input type="radio" name="q153" value="d"> d) main()</label>
+    </div>
+    <div class="answer-box" id="answer153" data-correct-answer="c">Correct Answer: c) run()</div>
+</div>
+
+<div class="question">
+    <h3>154. Which interface must a class implement to define a task for a thread?</h3>
+    <div class="options">
+        <label><input type="radio" name="q154" value="a"> a) Serializable</label>
+        <label><input type="radio" name="q154" value="b"> b) Cloneable</label>
+        <label><input type="radio" name="q154" value="c"> c) Runnable</label>
+        <label><input type="radio" name="q154" value="d"> d) Observer</label>
+    </div>
+    <div class="answer-box" id="answer154" data-correct-answer="c">Correct Answer: c) Runnable</div>
+</div>
+
+<div class="question">
+    <h3>155. What is the correct way to create a task in Java for multithreading?</h3>
+    <div class="options">
+        <label><input type="radio" name="q155" value="a"> a) Thread task = new Task();</label>
+        <label><input type="radio" name="q155" value="b"> b) Runnable task = new Task();</label>
+        <label><input type="radio" name="q155" value="c"> c) Task task = new Thread();</label>
+        <label><input type="radio" name="q155" value="d"> d) Runnable task = Task.run();</label>
+    </div>
+    <div class="answer-box" id="answer155" data-correct-answer="b">Correct Answer: b) Runnable task = new Task();</div>
+</div>
+
+<div class="question">
+    <h3>156. How do you create a thread using a Runnable task?</h3>
+    <div class="options">
+        <label><input type="radio" name="q156" value="a"> a) Thread thread = new Thread();</label>
+        <label><input type="radio" name="q156" value="b"> b) Thread thread = new Thread(task);</label>
+        <label><input type="radio" name="q156" value="c"> c) Thread task = new Runnable();</label>
+        <label><input type="radio" name="q156" value="d"> d) Thread thread = Task.run();</label>
+    </div>
+    <div class="answer-box" id="answer156" data-correct-answer="b">Correct Answer: b) Thread thread = new Thread(task);</div>
+</div>
+
+<div class="question">
+    <h3>157. What is the correct way to start a thread in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q157" value="a"> a) thread.run();</label>
+        <label><input type="radio" name="q157" value="b"> b) thread.start();</label>
+        <label><input type="radio" name="q157" value="c"> c) Thread.execute();</label>
+        <label><input type="radio" name="q157" value="d"> d) Runnable.start();</label>
+    </div>
+    <div class="answer-box" id="answer157" data-correct-answer="b">Correct Answer: b) thread.start();</div>
+</div>
+
+<div class="question">
+    <h3>158. Which approach is generally better for creating threads in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q158" value="a"> a) Extending the Thread class</label>
+        <label><input type="radio" name="q158" value="b"> b) Implementing the Runnable interface</label>
+        <label><input type="radio" name="q158" value="c"> c) Using only the main method for execution</label>
+        <label><input type="radio" name="q158" value="d"> d) Calling Thread.run() directly</label>
+    </div>
+    <div class="answer-box" id="answer158" data-correct-answer="b">Correct Answer: b) Implementing the Runnable interface</div>
+</div>
+
+<div class="question">
+    <h3>159. How do you define a custom thread class in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q159" value="a"> a) Implement Runnable</label>
+        <label><input type="radio" name="q159" value="b"> b) extend Thread and override run()</label>
+        <label><input type="radio" name="q159" value="c"> c) Call Thread.run() directly</label>
+        <label><input type="radio" name="q159" value="d"> d) Use execute() method</label>
+    </div>
+    <div class="answer-box" id="answer159" data-correct-answer="b">Correct Answer: b) extend Thread and override run()</div>
+</div>
+
+<div class="question">
+    <h3>160. Why are stop(), suspend(), and resume() deprecated in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q160" value="a"> a) They are no longer needed.</label>
+        <label><input type="radio" name="q160" value="b"> b) They are unsafe and can cause deadlocks.</label>
+        <label><input type="radio" name="q160" value="c"> c) They make Java slower.</label>
+        <label><input type="radio" name="q160" value="d"> d) They stop all threads permanently.</label>
+    </div>
+    <div class="answer-box" id="answer160" data-correct-answer="b">Correct Answer: b) They are unsafe and can cause deadlocks.</div>
+</div>
+
+<div class="question">
+    <h3>161. What is a safer way to stop a thread in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q161" value="a"> a) Assign null to the thread variable.</label>
+        <label><input type="radio" name="q161" value="b"> b) Use stop().</label>
+        <label><input type="radio" name="q161" value="c"> c) Call suspend().</label>
+        <label><input type="radio" name="q161" value="d"> d) Force close the program.</label>
+    </div>
+    <div class="answer-box" id="answer161" data-correct-answer="a">Correct Answer: a) Assign null to the thread variable.</div>
+</div>
+
+<div class="question">
+    <h3>162. Which method helps prevent thread starvation by pausing the current thread temporarily to let other threads execute?</h3>
+    <div class="options">
+        <label><input type="radio" name="q162" value="a"> a) sleep()</label>
+        <label><input type="radio" name="q162" value="b"> b) wait()</label>
+        <label><input type="radio" name="q162" value="c"> c) yield()</label>
+        <label><input type="radio" name="q162" value="d"> d) stop()</label>
+    </div>
+    <div class="answer-box" id="answer162" data-correct-answer="c">Correct Answer: c) yield()</div>
+</div>
+
+<div class="question">
+    <h3>163. Which method pauses the execution of the current thread for a specified time in milliseconds, allowing other threads to execute?</h3>
+    <div class="options">
+        <label><input type="radio" name="q163" value="a"> a) wait()</label>
+        <label><input type="radio" name="q163" value="b"> b) yield()</label>
+        <label><input type="radio" name="q163" value="c"> c) sleep()</label>
+        <label><input type="radio" name="q163" value="d"> d) stop()</label>
+    </div>
+    <div class="answer-box" id="answer163" data-correct-answer="c">Correct Answer: c) sleep()</div>
+</div>
+
+<div class="question">
+    <h3>164. Which exception must be handled when using sleep()?</h3>
+    <div class="options">
+        <label><input type="radio" name="q164" value="a"> a) InterruptedException</label>
+        <label><input type="radio" name="q164" value="b"> b) TimeoutException</label>
+        <label><input type="radio" name="q164" value="c"> c) ThreadException</label>
+        <label><input type="radio" name="q164" value="d"> d) IllegalStateException</label>
+    </div>
+    <div class="answer-box" id="answer164" data-correct-answer="a">Correct Answer: a) InterruptedException</div>
+</div>
+
+<div class="question">
+    <h3>165. When does an InterruptedException occur in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q165" value="a"> a) When a thread is manually stopped.</label>
+        <label><input type="radio" name="q165" value="b"> b) When a sleeping thread’s interrupt() method is called.</label>
+        <label><input type="radio" name="q165" value="c"> c) When a thread completes execution.</label>
+        <label><input type="radio" name="q165" value="d"> d) When a thread is created but not started.</label>
+    </div>
+    <div class="answer-box" id="answer165" data-correct-answer="b">Correct Answer: b) When a sleeping thread’s interrupt() method is called.</div>
+</div>
+
+<div class="question">
+    <h3>166. How should InterruptedException be handled in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q166" value="a"> a) It does not need to be handled.</label>
+        <label><input type="radio" name="q166" value="b"> b) It must be caught using a try-catch block or declared with throws.</label>
+        <label><input type="radio" name="q166" value="c"> c) It should be ignored because it rarely happens.</label>
+        <label><input type="radio" name="q166" value="d"> d) It can only be handled using System.exit().</label>
+    </div>
+    <div class="answer-box" id="answer166" data-correct-answer="b">Correct Answer: b) It must be caught using a try-catch block or declared with throws.</div>
+</div>
+
+<div class="question">
+    <h3>167. What is the correct way to handle InterruptedException inside a loop?</h3>
+    <div class="options">
+        <label><input type="radio" name="q167" value="a"> a) Place the try-catch block outside the loop.</label>
+        <label><input type="radio" name="q167" value="b"> b) Place the try-catch block inside the loop.</label>
+        <label><input type="radio" name="q167" value="c"> c) Use stop() instead of handling the exception.</label>
+        <label><input type="radio" name="q167" value="d"> d) Ignore the exception and let the loop continue.</label>
+    </div>
+    <div class="answer-box" id="answer167" data-correct-answer="a">Correct Answer: a) Place the try-catch block outside the loop.</div>
+</div>
+
+<div class="question">
+    <h3>168. What happens if the try-catch block is placed inside the loop?</h3>
+    <div class="options">
+        <label><input type="radio" name="q168" value="a"> a) The thread stops immediately when interrupted.</label>
+        <label><input type="radio" name="q168" value="b"> b) The loop may continue executing even after an interruption.</label>
+        <label><input type="radio" name="q168" value="c"> c) The exception is ignored completely.</label>
+        <label><input type="radio" name="q168" value="d"> d) The thread never gets interrupted.</label>
+    </div>
+    <div class="answer-box" id="answer168" data-correct-answer="b">Correct Answer: b) The loop may continue executing even after an interruption.</div>
+</div>
+
+<div class="question">
+    <h3>169. What is the purpose of the join() method in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q169" value="a"> a) To start a new thread.</label>
+        <label><input type="radio" name="q169" value="b"> b) To make one thread wait for another to finish.</label>
+        <label><input type="radio" name="q169" value="c"> c) To terminate all running threads.</label>
+        <label><input type="radio" name="q169" value="d"> d) To run two threads at the same time.</label>
+    </div>
+    <div class="answer-box" id="answer169" data-correct-answer="b">Correct Answer: b) To make one thread wait for another to finish.</div>
+</div>
+
+<div class="question">
+    <h3>170. Which of the following is an invalid thread priority range in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q170" value="a"> a) Thread.MIN_PRIORITY</label>
+        <label><input type="radio" name="q170" value="b"> b) Thread.NORM_PRIORITY</label>
+        <label><input type="radio" name="q170" value="c"> c) Thread.MAX_PRIORITY</label>
+        <label><input type="radio" name="q170" value="d"> d) None of the above</label>
+    </div>
+    <div class="answer-box" id="answer170" data-correct-answer="d">Correct Answer: d) None of the above</div>
+</div>
+
+<div class="question">
+    <h3>171. What will the following code do when i == 50?</h3>
+    <pre><code>for (int i = 1; i <= lastNum; i++) {
+ System.out.print(" " + i);
+ if (i == 50)
+ thread4.join();
+}</code></pre>
+    <div class="options">
+        <label><input type="radio" name="q171" value="a"> a) The loop will stop permanently at i == 50.</label>
+        <label><input type="radio" name="q171" value="b"> b) The loop will pause at i == 50 until thread4 finishes, then continue.</label>
+        <label><input type="radio" name="q171" value="c"> c) thread4 will stop executing immediately.</label>
+        <label><input type="radio" name="q171" value="d"> d) The loop will ignore join() and continue normally.</label>
+    </div>
+    <div class="answer-box" id="answer171" data-correct-answer="b">Correct Answer: b) The loop will pause at i == 50 until thread4 finishes, then continue.</div>
+</div>
+
+<div class="question">
+    <h3>172. Which method is used to set a thread’s priority in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q172" value="a"> a) setPriority(int priority)</label>
+        <label><input type="radio" name="q172" value="b"> b) assignPriority(int priority)</label>
+        <label><input type="radio" name="q172" value="c"> c) changePriority(int priority)</label>
+        <label><input type="radio" name="q172" value="d"> d) definePriority(int priority)</label>
+    </div>
+    <div class="answer-box" id="answer172" data-correct-answer="a">Correct Answer: a) setPriority(int priority)</div>
+</div>
+
+
+<div class="question">
+    <h3>173. What scheduling method is used when multiple threads have the same priority?</h3>
+    <div class="options">
+        <label><input type="radio" name="q173" value="a"> a) First-come, first-served scheduling.</label>
+        <label><input type="radio" name="q173" value="b"> b) Round-robin scheduling.</label>
+        <label><input type="radio" name="q173" value="c"> c) Random selection.</label>
+        <label><input type="radio" name="q173" value="d"> d) Only one thread runs, others are ignored.</label>
+    </div>
+    <div class="answer-box" id="answer173" data-correct-answer="b">Correct Answer: b) Round-robin scheduling.</div>
+</div>
+
+<div class="question">
+    <h3>174. Which methods can help prevent thread starvation?</h3>
+    <div class="options">
+        <label><input type="radio" name="q174" value="a"> a) yield()</label>
+        <label><input type="radio" name="q174" value="b"> b) sleep()</label>
+        <label><input type="radio" name="q174" value="c"> c) stop()</label>
+        <label><input type="radio" name="q174" value="d"> d) Both A and B</label>
+    </div>
+    <div class="answer-box" id="answer174" data-correct-answer="d">Correct Answer: d) Both A and B</div>
+</div>
+
+<div class="question">
+    <h3>175. Why is Platform.runLater() used in JavaFX?</h3>
+    <div class="options">
+        <label><input type="radio" name="q175" value="a"> a) To create new threads for animation.</label>
+        <label><input type="radio" name="q175" value="b"> b) To update the JavaFX UI from a background thread.</label>
+        <label><input type="radio" name="q175" value="c"> c) To stop all running threads.</label>
+        <label><input type="radio" name="q175" value="d"> d) To delay execution of animation indefinitely.</label>
+    </div>
+    <div class="answer-box" id="answer175" data-correct-answer="b">Correct Answer: b) To update the JavaFX UI from a background thread.</div>
+</div>
+
+<div class="question">
+    <h3>176. What is the purpose of a thread pool in Java?</h3>
+    <div class="options">
+        <label><input type="radio" name="q176" value="a"> a) To create a new thread for every task.</label>
+        <label><input type="radio" name="q176" value="b"> b) To manage a collection of reusable threads.</label>
+        <label><input type="radio" name="q176" value="c"> c) To execute only one task at a time.</label>
+        <label><input type="radio" name="q176" value="d"> d) To prevent thread execution in Java.</label>
+    </div>
+    <div class="answer-box" id="answer176" data-correct-answer="b">Correct Answer: b) To manage a collection of reusable threads.</div>
+</div>
+
+<div class="question">
+    <h3>177. What is the main difference between Executor and ExecutorService?</h3>
+    <div class="options">
+        <label><input type="radio" name="q177" value="a"> a) Executor executes threads, while ExecutorService manages and controls them.</label>
+        <label><input type="radio" name="q177" value="b"> b) Executor creates threads, ExecutorService does not.</label>
+        <label><input type="radio" name="q177" value="c"> c) Executor is a class, ExecutorService is an interface.</label>
+        <label><input type="radio" name="q177" value="d"> d) They are the same.</label>
+    </div>
+    <div class="answer-box" id="answer177" data-correct-answer="a">Correct Answer: a) Executor executes threads, while ExecutorService manages and controls them.</div>
+</div>
+
+<div class="question">
+    <h3>178. Which method immediately stops all running tasks and returns a list of unfinished tasks?</h3>
+    <div class="options">
+        <label><input type="radio" name="q178" value="a"> a) shutdown()</label>
+        <label><input type="radio" name="q178" value="b"> b) shutdownNow()</label>
+        <label><input type="radio" name="q178" value="c"> c) terminateAll()</label>
+        <label><input type="radio" name="q178" value="d"> d) stopExecution()</label>
+    </div>
+    <div class="answer-box" id="answer178" data-correct-answer="b">Correct Answer: b) shutdownNow()</div>
+</div>
+
+<div class="question">
+    <h3>179. Which method checks if the executor has been shut down?</h3>
+    <div class="options">
+        <label><input type="radio" name="q179" value="a"> a) isShutdown()</label>
+        <label><input type="radio" name="q179" value="b"> b) isStopped()</label>
+        <label><input type="radio" name="q179" value="c"> c) isTerminated()</label>
+        <label><input type="radio" name="q179" value="d"> d) hasShutdown()</label>
+    </div>
+    <div class="answer-box" id="answer179" data-correct-answer="a">Correct Answer: a) isShutdown()</div>
+</div>
+
+<div class="question">
+    <h3>180. Which method returns true only if all tasks in the executor have completed?</h3>
+    <div class="options">
+        <label><input type="radio" name="q180" value="a"> a) hasCompleted()</label>
+        <label><input type="radio" name="q180" value="b"> b) isShutdown()</label>
+        <label><input type="radio" name="q180" value="c"> c) isTerminated()</label>
+        <label><input type="radio" name="q180" value="d"> d) terminateAll()</label>
+    </div>
+    <div class="answer-box" id="answer180" data-correct-answer="c">Correct Answer: c) isTerminated()</div>
+</div>
+
+<div class="question">
+    <h3>181. Which method creates a thread pool with a fixed number of threads?</h3>
+    <div class="options">
+        <label><input type="radio" name="q181" value="a"> a) newCachedThreadPool()</label>
+        <label><input type="radio" name="q181" value="b"> b) newFixedThreadPool(int numberOfThreads)</label>
+        <label><input type="radio" name="q181" value="c"> c) createFixedPool(int size)</label>
+        <label><input type="radio" name="q181" value="d"> d) setThreadLimit(int count)</label>
+    </div>
+    <div class="answer-box" id="answer181" data-correct-answer="b">Correct Answer: b) newFixedThreadPool(int numberOfThreads)</div>
+</div>
+
+<div class="question">
+    <h3>182. Which method creates a thread pool that dynamically adjusts by creating new threads as needed?</h3>
+    <div class="options">
+        <label><input type="radio" name="q182" value="a"> a) newFixedThreadPool(int numberOfThreads)</label>
+        <label><input type="radio" name="q182" value="b"> b) newCachedThreadPool()</label>
+        <label><input type="radio" name="q182" value="c"> c) newDynamicThreadPool()</label>
+        <label><input type="radio" name="q182" value="d"> d) setFlexibleThreadPool()</label>
+    </div>
+    <div class="answer-box" id="answer182" data-correct-answer="b">Correct Answer: b) newCachedThreadPool()</div>
+</div>
+
+<div class="question">
+    <h3>183. Which method shuts down the executor but allows existing tasks to complete?</h3>
+    <div class="options">
+        <label><input type="radio" name="q183" value="a"> a) shutdownNow()</label>
+        <label><input type="radio" name="q183" value="b"> b) terminate()</label>
+        <label><input type="radio" name="q183" value="c"> c) shutdown()</label>
+        <label><input type="radio" name="q183" value="d"> d) stopAll()</label>
+    </div>
+    <div class="answer-box" id="answer183" data-correct-answer="c">Correct Answer: c) shutdown()</div>
+</div>
+
+
+
+
+
+    </div>
+    <script>
+        function resetQuiz() {
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => radio.checked = false);
+
+            const answerBoxes = document.querySelectorAll('.answer-box');
+            answerBoxes.forEach(box => {
+                box.style.display = 'none';
+                box.classList.remove('correct', 'incorrect');
+                const correctAnswer = box.getAttribute('data-correct-answer');
+                if (correctAnswer) {
+                    box.textContent = `Correct Answer: ${box.dataset.correctAnswer}`;
+                }
+            });
+        }
+
+        function showAllAnswers() {
+    const answerBoxes = document.querySelectorAll('.answer-box');
+    answerBoxes.forEach(box => {
+        const [correctAnswer, explanation] = box.dataset.correctAnswer.split('|');
+        box.innerHTML = `Correct Answer: ${correctAnswer}${explanation ? `<br>${explanation}` : ''}`;
+        box.style.display = 'block';
+        box.classList.add('correct');
+    });
+}
+
+	function validateMultipleChoice(questionNumber) {
+    const checkboxes = document.querySelectorAll(`input[name="q${questionNumber}"]:checked`);
+    const selectedValues = Array.from(checkboxes).map(cb => cb.value).sort().join(",");
+    const answerBox = document.getElementById(`answer${questionNumber}`);
+    const correctAnswers = answerBox.dataset.correctAnswer.split(",").sort().join(",");
+
+    // Get the required number of correct answers
+    const requiredSelections = answerBox.dataset.correctAnswer.split(",").length;
+
+    // Only show result if the user has selected the required number of options
+    if (checkboxes.length >= requiredSelections) {
+        if (selectedValues === correctAnswers) {
+            answerBox.textContent = "Correct!";
+            answerBox.classList.add("correct");
+            answerBox.classList.remove("incorrect");
+        } else {
+            answerBox.textContent = `Incorrect. Correct Answers: ${answerBox.dataset.correctAnswer}`;
+            answerBox.classList.add("incorrect");
+            answerBox.classList.remove("correct");
+        }
+        answerBox.style.display = "block";
+    } else {
+        answerBox.style.display = "none"; // Hide answer box until enough choices are made
+    }
+}
+
+// Attach event listener to all checkboxes
+document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener("change", (e) => {
+        const questionNumber = e.target.name.substring(1);
+        validateMultipleChoice(questionNumber);
+    });
+});
+
+
+
+        function hideAllAnswers() {
+            const answerBoxes = document.querySelectorAll('.answer-box');
+            answerBoxes.forEach(box => {
+                box.style.display = 'none';
+                box.classList.remove('correct', 'incorrect');
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+radioButtons.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const questionNumber = e.target.name.substring(1);
+        const answerBox = document.getElementById(`answer${questionNumber}`);
+        const correctAnswerValue = answerBox.getAttribute('data-correct-answer');
+        const [correctAnswer, explanation] = correctAnswerValue.split('|');
+        const userAnswer = e.target.value;
+
+        if (userAnswer === correctAnswer) {
+            answerBox.innerHTML = `Correct!<br>${explanation || ''}`;
+            answerBox.classList.add('correct');
+            answerBox.classList.remove('incorrect');
+        } else {
+            answerBox.innerHTML = `Incorrect. Correct Answer: ${correctAnswer}${explanation ? `<br>${explanation}` : ''}`;
+            answerBox.classList.add('incorrect');
+            answerBox.classList.remove('correct');
+        }
+        answerBox.style.display = 'block';
+    });
+});
+    </script>
+</body>
+</html>
